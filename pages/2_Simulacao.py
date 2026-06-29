@@ -10,13 +10,15 @@ from config import COPA_2026_GROUPS, DEFAULT_N_SIMULATIONS, N_BEST_THIRDS
 from src import state_manager as sm, monte_carlo as mc
 from src import copa_manager as cm
 from src.styles import get_css
+from src.sidebar import render_sidebar
 
 st.set_page_config(page_title='Simulação MC · Copa 2026', page_icon='🎲', layout='wide')
 st.markdown(get_css(), unsafe_allow_html=True)
+render_sidebar()
 
 
 @st.cache_data(show_spinner=False)
-def _get_state():
+def _get_state(_mtime: float):
     return sm.get_or_build_state()
 
 @st.cache_data(show_spinner='Simulando...')
@@ -28,7 +30,7 @@ def _run_mc(state_hash: str, n_sims: int):
     )
 
 
-state = _get_state()
+state = _get_state(sm.state_file_mtime())
 st.markdown('<h1 style="font-size:1.8rem">🎲 Simulação Monte Carlo</h1>', unsafe_allow_html=True)
 st.markdown(
     '<div class="stage-label">Probabilidades calculadas via '

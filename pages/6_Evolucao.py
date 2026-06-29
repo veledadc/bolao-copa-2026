@@ -11,10 +11,12 @@ import plotly.express as px
 from config import COPA_2026_GROUPS, DEFAULT_ELO_RATINGS
 from src import data_loader, elo as elo_mod
 from src.styles import get_css
+from src.sidebar import render_sidebar
 
 st.set_page_config(page_title='Evolução · Bolão 2026', page_icon='📈',
                    layout='wide', initial_sidebar_state='expanded')
 st.markdown(get_css(), unsafe_allow_html=True)
+render_sidebar()
 st.title('📈 Evolução do Elo Rating')
 
 df_all = data_loader.get_all_results()

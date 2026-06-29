@@ -11,9 +11,11 @@ from src import state_manager as sm
 from src.features import team_feature_summary
 from src.elo import win_probability
 from src.styles import get_css
+from src.sidebar import render_sidebar
 
 st.set_page_config(page_title='Ranking Elo · Copa 2026', page_icon='📊', layout='wide')
 st.markdown(get_css(), unsafe_allow_html=True)
+render_sidebar()
 st.markdown('<h1 style="font-size:1.8rem">📊 Ranking Elo das Seleções</h1>', unsafe_allow_html=True)
 st.markdown(
     'Elo base + ajuste de **Forma Recente** (±30 pts) + **Histórico de Copa** (±12 pts) '
@@ -22,11 +24,11 @@ st.markdown(
 
 
 @st.cache_data(show_spinner='Carregando estado...')
-def _get_state():
+def _get_state(_mtime: float):
     return sm.get_or_build_state()
 
 
-state = _get_state()
+state = _get_state(sm.state_file_mtime())
 elos  = state['elos']
 form  = state.get('form', {})
 copa  = state.get('copa_history', {})

@@ -20,6 +20,7 @@ env/
 
 # Data — manter CSVs de dados mas não resultados manuais temporários
 data/manual_results.csv
+data/sync_log.txt
 
 # OS
 .DS_Store

@@ -11,9 +11,11 @@ from config import COPA_2026_GROUPS, DEFAULT_N_SIMULATIONS, TEAM_CONFEDERATION, 
 from src import state_manager as sm, monte_carlo as mc
 from src.features import team_feature_summary
 from src.styles import get_css
+from src.sidebar import render_sidebar
 
 st.set_page_config(page_title='Probabilidades · Copa 2026', page_icon='🏆', layout='wide')
 st.markdown(get_css(), unsafe_allow_html=True)
+render_sidebar()
 st.markdown('<h1 style="font-size:1.8rem">🏆 Probabilidades por Fase</h1>', unsafe_allow_html=True)
 
 

@@ -14,6 +14,7 @@ from config import COPA_2026_GROUPS, DEFAULT_N_SIMULATIONS, N_BEST_THIRDS
 from src import state_manager as sm, monte_carlo as mc
 from src import copa_manager as cm
 from src.styles import get_css
+from src.sidebar import render_sidebar
 
 st.set_page_config(
     page_title='Copa 2026 Predictor',
@@ -26,7 +27,7 @@ st.markdown(get_css(), unsafe_allow_html=True)
 # ── Cached helpers ─────────────────────────────────────────────────────────────
 
 @st.cache_data(show_spinner=False)
-def _load_state():
+def _load_state(_mtime: float):
     return sm.get_or_build_state()
 
 @st.cache_data(show_spinner=False)
@@ -44,7 +45,7 @@ def _get_state():
         _load_state.clear()
         _run_sim.clear()
         st.session_state['state_dirty'] = False
-    return _load_state()
+    return _load_state(sm.state_file_mtime())
 
 def _compute_adjusted_elos(base_state: dict, copa_sim: dict, copa_ko_sim: dict,
                             schedule: list, ko_resolved: list) -> dict:
@@ -182,35 +183,8 @@ ko_official   = {k: v for k, v in official.items() if not k.startswith('G_')}
 ko_resolved   = cm.resolve_knockout_teams(ko_sched, bracket_slots, ko_official, copa_ko_sim)
 
 # ── Sidebar ─────────────────────────────────────────────────────────────────────
+render_sidebar()
 with st.sidebar:
-    st.markdown(
-        '<div style="padding:.4rem 0 .8rem">'
-        '<div style="font-size:1.25rem;font-weight:900;color:#c9a902;letter-spacing:-.02em">'
-        '⚽ Copa 2026</div>'
-        '<div style="font-size:.7rem;color:#3a5a78;text-transform:uppercase;'
-        'letter-spacing:.08em;margin-top:2px">Predictor</div>'
-        '</div>',
-        unsafe_allow_html=True,
-    )
-
-    st.markdown('<div style="font-size:.68rem;color:#2a4a68;text-transform:uppercase;'
-                'letter-spacing:.1em;padding:.2rem 0 .3rem">Navegação principal</div>',
-                unsafe_allow_html=True)
-    st.page_link('app.py',                     label='🏠  Home')
-    st.page_link('pages/4_Historico.py',        label='📜  Histórico de Resultados')
-    st.page_link('pages/7_Documentacao.py',     label='📚  Documentação')
-    st.page_link('pages/8_Cenarios_Finais.py',  label='🔮  Cenários das Finais')
-
-    st.markdown('<div style="border-top:1px solid #0d2040;margin:.6rem 0 .5rem"></div>',
-                unsafe_allow_html=True)
-    st.markdown('<div style="font-size:.68rem;color:#2a4a68;text-transform:uppercase;'
-                'letter-spacing:.1em;padding:.1rem 0 .3rem">Análises</div>',
-                unsafe_allow_html=True)
-    st.page_link('pages/1_Campeoes.py',         label='🏆  Probabilidades Detalhadas')
-    st.page_link('pages/5_Ranking_Elo.py',       label='📊  Ranking Elo')
-    st.page_link('pages/2_Simulacao.py',         label='🎲  Simulação Monte Carlo')
-    st.page_link('pages/3_Novo_Resultado.py',    label='➕  Novo Resultado Histórico')
-
     st.markdown('<div style="border-top:1px solid #0d2040;margin:.6rem 0 .5rem"></div>',
                 unsafe_allow_html=True)
     meta = state.get('meta', {})
@@ -233,12 +207,13 @@ st.markdown(
     '<h1 style="font-size:2.1rem;margin-bottom:.28rem">⚽ Copa do Mundo 2026</h1>'
     '<div class="stage-label">'
     '🇺🇸 EUA &nbsp;·&nbsp; 🇨🇦 CANADÁ &nbsp;·&nbsp; 🇲🇽 MÉXICO'
-    ' &nbsp;|&nbsp; 11 JUN – 26 JUL 2026</div>'
+    ' &nbsp;|&nbsp; 11 JUN – 19 JUL 2026</div>'
     '<nav style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.85rem;margin-bottom:.2rem">'
-    f'<a href="/"               target="_self" style="{_NA}">🏠 Home</a>'
-    f'<a href="/Historico"      target="_self" style="{_NN}">📜 Histórico</a>'
-    f'<a href="/Documentacao"   target="_self" style="{_NN}">📚 Documentação</a>'
-    f'<a href="/Cenarios_Finais" target="_self" style="{_NN}">🔮 Cenários das Finais</a>'
+    f'<a href="/"                target="_self" style="{_NA}">🏠 Início</a>'
+    f'<a href="/Cenarios_Finais" target="_self" style="{_NN}">🔮 Cenários</a>'
+    f'<a href="/Campeoes"        target="_self" style="{_NN}">🏆 Probabilidades</a>'
+    f'<a href="/Ranking_Elo"     target="_self" style="{_NN}">📊 Ranking Elo</a>'
+    f'<a href="/Historico"       target="_self" style="{_NN}">📜 Histórico</a>'
     '</nav>',
     unsafe_allow_html=True,
 )
@@ -273,13 +248,13 @@ with st.expander('🎭 Cerimônias de Abertura e Encerramento', expanded=False):
     with cc2:
         gcal_close = _gcal_url(
             'Cerimônia de Encerramento', 'Copa do Mundo 2026',
-            '2026-07-26', '15:00', 'MetLife Stadium', 'East Rutherford / Nova York',
+            '2026-07-19', '16:00', 'MetLife Stadium', 'East Rutherford / Nova York',
         )
         st.markdown(
             f'<div style="padding:.6rem 0">'
             f'<div style="font-weight:700;font-size:1rem;margin-bottom:.4rem">🏆 Cerimônia de Encerramento + Final</div>'
-            f'📅 26 de Julho de 2026<br>'
-            f'⏰ 15:00 BRT · 🏟️ MetLife Stadium, Nova York/NJ, EUA<br>'
+            f'📅 19 de Julho de 2026<br>'
+            f'⏰ 16:00 BRT · 🏟️ MetLife Stadium, Nova York/NJ, EUA<br>'
             f'<div style="margin:.5rem 0">{_TV_CHIPS_CEREMONY}</div>'
             f'<a href="{gcal_close}" target="_blank" style="color:#4472c4;font-size:.8rem">'
             f'📆 Adicionar ao Google Calendário</a>'
@@ -344,15 +319,17 @@ fig = px.bar(
     text='Campeão (%)', title='Top 10 Favoritos ao Título',
     height=390,
 )
-fig.update_traces(texttemplate='%{text:.1f}%', textposition='outside')
+fig.update_traces(texttemplate='%{text:.1f}%', textposition='auto')
 fig.update_layout(
     yaxis={'categoryorder': 'total ascending'},
     coloraxis_showscale=False,
     plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
     font_color='#d8e2ef', title_font_color='#c9a902',
-    margin=dict(l=10, r=90, t=50, b=10),
+    margin=dict(l=0, r=55, t=50, b=10),
+    uniformtext_minsize=8, uniformtext_mode='hide',
+    xaxis=dict(range=[0, df_chart['Campeão (%)'].max() * 1.18]),
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, config={'responsive': True})
 
 with st.expander(f'📋 Ver todos os {len(sorted_teams)} times'):
     rows_all = []
@@ -497,7 +474,7 @@ def _render_match(m: dict, off: dict, sim: dict, elos: dict):
             with gc1:
                 if st.button('✅ Confirmar e Gravar', key=f'yes_{mid}',
                              type='secondary', use_container_width=True):
-                    cm.save_official_result(mid, hs_c, as_c)
+                    cm.save_official_result(mid, hs_c, as_c, home, away)
                     cur   = sm.load_state() or state
                     new_s = sm.apply_result(cur, home, away, hs_c, as_c,
                                             'FIFA World Cup', neutral=True)
@@ -765,7 +742,7 @@ def _render_ko_match(m: dict, ko_off: dict, ko_sim: dict,
         with cc1:
             if st.button('✅ Confirmar', key=f'yes_{mid}', type='secondary',
                          use_container_width=True):
-                cm.save_official_result(mid, hs_c, as_c)
+                cm.save_official_result(mid, hs_c, as_c, home, away)
                 cur   = sm.load_state() or state
                 new_s = sm.apply_result(cur, home, away, hs_c, as_c,
                                         'FIFA World Cup', neutral=True)
@@ -799,12 +776,12 @@ ko_official   = {k: v for k, v in official_now.items() if not k.startswith('G_')
 ko_resolved   = cm.resolve_knockout_teams(ko_sched, bracket_slots, ko_official, ko_sim_now)
 
 _PHASES = [
-    ('r32',   '🗂️ Rodada de 32',     'Jul 4–11',  16),
-    ('r16',   '⚔️ Oitavas de Final',  'Jul 13–16',  8),
-    ('qf',    '🏟️ Quartas de Final',  'Jul 18–19',  4),
-    ('sf',    '🌟 Semifinais',        'Jul 22–23',  2),
-    ('tp',    '🥉 Disputa 3º Lugar',  'Jul 25',     1),
-    ('final', '🏆 Final',             'Jul 26',     1),
+    ('r32',   '🗂️ Rodada de 32',     'Jun 28–Jul 3', 16),
+    ('r16',   '⚔️ Oitavas de Final',  'Jul 4–7',       8),
+    ('qf',    '🏟️ Quartas de Final',  'Jul 9–11',      4),
+    ('sf',    '🌟 Semifinais',        'Jul 14–15',     2),
+    ('tp',    '🥉 Disputa 3º Lugar',  'Jul 18',        1),
+    ('final', '🏆 Final',             'Jul 19',        1),
 ]
 
 for phase_key, phase_label, phase_dates, expected in _PHASES:

@@ -10,10 +10,12 @@ import numpy as np
 
 from src.elo import win_probability
 from src.styles import get_css
+from src.sidebar import render_sidebar
 
 st.set_page_config(page_title='Documentação · Bolão 2026', page_icon='📖',
                    layout='wide', initial_sidebar_state='expanded')
 st.markdown(get_css(), unsafe_allow_html=True)
+render_sidebar()
 st.title('📖 Como o Modelo Funciona')
 
 # ------------------------------------------------------------------

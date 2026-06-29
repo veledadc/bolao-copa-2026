@@ -43,6 +43,16 @@ def save_state(state: dict) -> None:
         json.dump(state, f, indent=2, default=str, ensure_ascii=False)
 
 
+def state_file_mtime() -> float:
+    """mtime de state.json, ou 0 se ainda não existir.
+
+    Usado como chave de cache do Streamlit: quando um processo externo
+    (ex.: o sync diário de resultados) regrava state.json, o mtime muda e
+    invalida o cache em memória de uma sessão já aberta no navegador.
+    """
+    return os.path.getmtime(_STATE_FILE) if os.path.exists(_STATE_FILE) else 0.0
+
+
 def _hash_elos(elos: dict) -> str:
     raw = json.dumps(sorted(elos.items()), ensure_ascii=False)
     return hashlib.md5(raw.encode()).hexdigest()[:12]

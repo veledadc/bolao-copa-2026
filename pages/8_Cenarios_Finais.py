@@ -15,41 +15,17 @@ from src import state_manager as sm, monte_carlo as mc
 from src import copa_manager as cm
 from src.copa_manager import TEAM_FLAGS
 from src.styles import get_css
+from src.sidebar import render_sidebar
 
 st.set_page_config(page_title='Cenários das Finais · Copa 2026', page_icon='🔮',
                    layout='wide', initial_sidebar_state='expanded')
 st.markdown(get_css(), unsafe_allow_html=True)
-
-# ── Sidebar ────────────────────────────────────────────────────────────────────
-with st.sidebar:
-    st.markdown(
-        '<div style="padding:.4rem 0 .8rem">'
-        '<div style="font-size:1.25rem;font-weight:900;color:#c9a902">⚽ Copa 2026</div>'
-        '<div style="font-size:.7rem;color:#3a5a78;text-transform:uppercase;'
-        'letter-spacing:.08em;margin-top:2px">Predictor</div>'
-        '</div>',
-        unsafe_allow_html=True,
-    )
-    st.markdown('<div style="font-size:.68rem;color:#2a4a68;text-transform:uppercase;'
-                'letter-spacing:.1em;padding:.2rem 0 .3rem">Navegação principal</div>',
-                unsafe_allow_html=True)
-    st.page_link('app.py',                     label='🏠  Home')
-    st.page_link('pages/4_Historico.py',        label='📜  Histórico de Resultados')
-    st.page_link('pages/7_Documentacao.py',     label='📚  Documentação')
-    st.page_link('pages/8_Cenarios_Finais.py',  label='🔮  Cenários das Finais')
-    st.markdown('<div style="border-top:1px solid #0d2040;margin:.6rem 0 .5rem"></div>',
-                unsafe_allow_html=True)
-    st.markdown('<div style="font-size:.68rem;color:#2a4a68;text-transform:uppercase;'
-                'letter-spacing:.1em;padding:.1rem 0 .3rem">Análises</div>',
-                unsafe_allow_html=True)
-    st.page_link('pages/1_Campeoes.py',         label='🏆  Probabilidades Detalhadas')
-    st.page_link('pages/5_Ranking_Elo.py',       label='📊  Ranking Elo')
-    st.page_link('pages/2_Simulacao.py',         label='🎲  Simulação Monte Carlo')
+render_sidebar()
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
 @st.cache_data(show_spinner=False)
-def _load_state():
+def _load_state(_mtime: float):
     return sm.get_or_build_state()
 
 @st.cache_data(show_spinner=False)
@@ -233,7 +209,7 @@ def _compute_adjusted_elos(base_state, copa_sim, copa_ko_sim, schedule, ko_resol
 
 
 # ── Load state + compute cache key ─────────────────────────────────────────────
-state       = _load_state()
+state       = _load_state(sm.state_file_mtime())
 official    = cm.load_official()
 copa_sim    = st.session_state.get('copa_sim', {})
 copa_ko_sim = st.session_state.get('copa_ko_sim', {})

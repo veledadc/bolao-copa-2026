@@ -1,0 +1,594 @@
+{
+  "G_A_MD1_1": {
+    "home_score": 2,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.377824",
+    "home": "Mexico",
+    "away": "South Africa"
+  },
+  "G_A_MD1_2": {
+    "home_score": 2,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.384085",
+    "home": "South Korea",
+    "away": "Czechia"
+  },
+  "G_C_MD2_1": {
+    "home_score": 3,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.401994",
+    "home": "Brazil",
+    "away": "Haiti"
+  },
+  "G_C_MD2_2": {
+    "home_score": 1,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.408306",
+    "home": "Morocco",
+    "away": "Scotland"
+  },
+  "G_D_MD1_1": {
+    "home_score": 4,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.417961",
+    "home": "USA",
+    "away": "Paraguay"
+  },
+  "G_F_MD1_1": {
+    "home_score": 2,
+    "away_score": 2,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.436015",
+    "home": "Netherlands",
+    "away": "Japan"
+  },
+  "G_F_MD1_2": {
+    "home_score": 5,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.442782",
+    "home": "Sweden",
+    "away": "Tunisia"
+  },
+  "G_G_MD2_1": {
+    "home_score": 0,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.454550",
+    "home": "Belgium",
+    "away": "Iran"
+  },
+  "G_G_MD2_2": {
+    "home_score": 3,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.461085",
+    "home": "Egypt",
+    "away": "New Zealand"
+  },
+  "G_J_MD1_1": {
+    "home_score": 3,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.481637",
+    "home": "Argentina",
+    "away": "Algeria"
+  },
+  "G_J_MD1_2": {
+    "home_score": 3,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.487560",
+    "home": "Austria",
+    "away": "Jordan"
+  },
+  "G_K_MD2_1": {
+    "home_score": 5,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.498952",
+    "home": "Portugal",
+    "away": "Uzbekistan"
+  },
+  "G_K_MD2_2": {
+    "home_score": 0,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:35:25.505158",
+    "home": "DR Congo",
+    "away": "Colombia"
+  },
+  "G_A_MD2_1": {
+    "home_score": 1,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.169848",
+    "home": "Mexico",
+    "away": "South Korea"
+  },
+  "G_A_MD2_2": {
+    "home_score": 1,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.176629",
+    "home": "South Africa",
+    "away": "Czechia"
+  },
+  "G_A_MD3_1": {
+    "home_score": 3,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.182262",
+    "home": "Mexico",
+    "away": "Czechia"
+  },
+  "G_A_MD3_2": {
+    "home_score": 1,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.187510",
+    "home": "South Africa",
+    "away": "South Korea"
+  },
+  "G_B_MD1_1": {
+    "home_score": 1,
+    "away_score": 2,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.192653",
+    "home": "Canada",
+    "away": "Switzerland"
+  },
+  "G_B_MD1_2": {
+    "home_score": 1,
+    "away_score": 3,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.198537",
+    "home": "Qatar",
+    "away": "Bosnia Herzegovina"
+  },
+  "G_B_MD2_1": {
+    "home_score": 6,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.204365",
+    "home": "Canada",
+    "away": "Qatar"
+  },
+  "G_B_MD2_2": {
+    "home_score": 4,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.210505",
+    "home": "Switzerland",
+    "away": "Bosnia Herzegovina"
+  },
+  "G_B_MD3_1": {
+    "home_score": 1,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.215999",
+    "home": "Canada",
+    "away": "Bosnia Herzegovina"
+  },
+  "G_B_MD3_2": {
+    "home_score": 1,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.222158",
+    "home": "Switzerland",
+    "away": "Qatar"
+  },
+  "G_C_MD1_1": {
+    "home_score": 1,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.228446",
+    "home": "Brazil",
+    "away": "Morocco"
+  },
+  "G_C_MD1_2": {
+    "home_score": 0,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.234214",
+    "home": "Haiti",
+    "away": "Scotland"
+  },
+  "G_C_MD3_1": {
+    "home_score": 3,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.239750",
+    "home": "Brazil",
+    "away": "Scotland"
+  },
+  "G_C_MD3_2": {
+    "home_score": 4,
+    "away_score": 2,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.245746",
+    "home": "Morocco",
+    "away": "Haiti"
+  },
+  "G_D_MD1_2": {
+    "home_score": 2,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.252455",
+    "home": "Australia",
+    "away": "Turkey"
+  },
+  "G_D_MD2_1": {
+    "home_score": 2,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.257891",
+    "home": "USA",
+    "away": "Australia"
+  },
+  "G_D_MD2_2": {
+    "home_score": 1,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.263480",
+    "home": "Paraguay",
+    "away": "Turkey"
+  },
+  "G_D_MD3_1": {
+    "home_score": 2,
+    "away_score": 3,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.268843",
+    "home": "USA",
+    "away": "Turkey"
+  },
+  "G_D_MD3_2": {
+    "home_score": 0,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.274021",
+    "home": "Paraguay",
+    "away": "Australia"
+  },
+  "G_E_MD1_1": {
+    "home_score": 7,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.279470",
+    "home": "Germany",
+    "away": "Curacao"
+  },
+  "G_E_MD1_2": {
+    "home_score": 1,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.284713",
+    "home": "Ivory Coast",
+    "away": "Ecuador"
+  },
+  "G_E_MD2_1": {
+    "home_score": 2,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.289884",
+    "home": "Germany",
+    "away": "Ivory Coast"
+  },
+  "G_E_MD2_2": {
+    "home_score": 0,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.295626",
+    "home": "Curacao",
+    "away": "Ecuador"
+  },
+  "G_E_MD3_1": {
+    "home_score": 1,
+    "away_score": 2,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.301613",
+    "home": "Germany",
+    "away": "Ecuador"
+  },
+  "G_E_MD3_2": {
+    "home_score": 0,
+    "away_score": 2,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.306878",
+    "home": "Curacao",
+    "away": "Ivory Coast"
+  },
+  "G_F_MD2_1": {
+    "home_score": 5,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.312377",
+    "home": "Netherlands",
+    "away": "Sweden"
+  },
+  "G_F_MD2_2": {
+    "home_score": 4,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.318101",
+    "home": "Japan",
+    "away": "Tunisia"
+  },
+  "G_F_MD3_1": {
+    "home_score": 3,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.324004",
+    "home": "Netherlands",
+    "away": "Tunisia"
+  },
+  "G_F_MD3_2": {
+    "home_score": 1,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.329349",
+    "home": "Japan",
+    "away": "Sweden"
+  },
+  "G_G_MD1_1": {
+    "home_score": 1,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.334912",
+    "home": "Belgium",
+    "away": "Egypt"
+  },
+  "G_G_MD1_2": {
+    "home_score": 2,
+    "away_score": 2,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.341338",
+    "home": "Iran",
+    "away": "New Zealand"
+  },
+  "G_G_MD3_1": {
+    "home_score": 5,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.347660",
+    "home": "Belgium",
+    "away": "New Zealand"
+  },
+  "G_G_MD3_2": {
+    "home_score": 1,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.353158",
+    "home": "Egypt",
+    "away": "Iran"
+  },
+  "G_H_MD1_1": {
+    "home_score": 0,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.358948",
+    "home": "Spain",
+    "away": "Cape Verde"
+  },
+  "G_H_MD1_2": {
+    "home_score": 1,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.364485",
+    "home": "Saudi Arabia",
+    "away": "Uruguay"
+  },
+  "G_H_MD2_1": {
+    "home_score": 4,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.369928",
+    "home": "Spain",
+    "away": "Saudi Arabia"
+  },
+  "G_H_MD2_2": {
+    "home_score": 2,
+    "away_score": 2,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.375691",
+    "home": "Cape Verde",
+    "away": "Uruguay"
+  },
+  "G_H_MD3_1": {
+    "home_score": 1,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.381700",
+    "home": "Spain",
+    "away": "Uruguay"
+  },
+  "G_H_MD3_2": {
+    "home_score": 0,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.388305",
+    "home": "Cape Verde",
+    "away": "Saudi Arabia"
+  },
+  "G_I_MD1_1": {
+    "home_score": 3,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.393764",
+    "home": "France",
+    "away": "Senegal"
+  },
+  "G_I_MD1_2": {
+    "home_score": 1,
+    "away_score": 4,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.399172",
+    "home": "Iraq",
+    "away": "Norway"
+  },
+  "G_I_MD2_1": {
+    "home_score": 3,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.404725",
+    "home": "France",
+    "away": "Iraq"
+  },
+  "G_I_MD2_2": {
+    "home_score": 2,
+    "away_score": 3,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.410936",
+    "home": "Senegal",
+    "away": "Norway"
+  },
+  "G_I_MD3_1": {
+    "home_score": 4,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.417130",
+    "home": "France",
+    "away": "Norway"
+  },
+  "G_I_MD3_2": {
+    "home_score": 5,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.422775",
+    "home": "Senegal",
+    "away": "Iraq"
+  },
+  "G_J_MD2_1": {
+    "home_score": 2,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.428162",
+    "home": "Argentina",
+    "away": "Austria"
+  },
+  "G_J_MD2_2": {
+    "home_score": 2,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.433967",
+    "home": "Algeria",
+    "away": "Jordan"
+  },
+  "G_J_MD3_1": {
+    "home_score": 3,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.439939",
+    "home": "Argentina",
+    "away": "Jordan"
+  },
+  "G_J_MD3_2": {
+    "home_score": 3,
+    "away_score": 3,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.445554",
+    "home": "Algeria",
+    "away": "Austria"
+  },
+  "G_K_MD1_1": {
+    "home_score": 1,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.452088",
+    "home": "Portugal",
+    "away": "DR Congo"
+  },
+  "G_K_MD1_2": {
+    "home_score": 1,
+    "away_score": 3,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.458808",
+    "home": "Uzbekistan",
+    "away": "Colombia"
+  },
+  "G_K_MD3_1": {
+    "home_score": 0,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.465627",
+    "home": "Portugal",
+    "away": "Colombia"
+  },
+  "G_K_MD3_2": {
+    "home_score": 3,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.472438",
+    "home": "DR Congo",
+    "away": "Uzbekistan"
+  },
+  "G_L_MD1_1": {
+    "home_score": 4,
+    "away_score": 2,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.478163",
+    "home": "England",
+    "away": "Croatia"
+  },
+  "G_L_MD1_2": {
+    "home_score": 1,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.484088",
+    "home": "Ghana",
+    "away": "Panama"
+  },
+  "G_L_MD2_1": {
+    "home_score": 0,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.490361",
+    "home": "England",
+    "away": "Ghana"
+  },
+  "G_L_MD2_2": {
+    "home_score": 1,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.496424",
+    "home": "Croatia",
+    "away": "Panama"
+  },
+  "G_L_MD3_1": {
+    "home_score": 2,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.503456",
+    "home": "England",
+    "away": "Panama"
+  },
+  "G_L_MD3_2": {
+    "home_score": 2,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T15:37:27.510293",
+    "home": "Croatia",
+    "away": "Ghana"
+  },
+  "M73": {
+    "home_score": 0,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T16:09:22.905819",
+    "home": "South Africa",
+    "away": "Canada"
+  },
+  "M76": {
+    "home_score": 2,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-06-29T16:15:45.692709",
+    "home": "Brazil",
+    "away": "Japan"
+  }
+}

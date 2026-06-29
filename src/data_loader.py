@@ -33,6 +33,11 @@ def load_historical_results() -> pd.DataFrame:
 
     df = df[EXPECTED_COLUMNS].copy()
     df = df[df['date'].dt.year >= ELO_CUTOFF_YEAR]
+    # Partidas da Copa 2026 são geridas exclusivamente via data/copa_official.json
+    # (com locking/edição/exclusão pela página "Corrigir Placar Gravado"). Excluímos
+    # aqui para não contar o mesmo jogo duas vezes no Elo quando results.csv for
+    # atualizado pelo sync diário com os placares reais do torneio.
+    df = df[~((df['tournament'] == 'FIFA World Cup') & (df['date'].dt.year == 2026))]
     df = df.dropna(subset=['home_score', 'away_score'])
     df['home_score'] = df['home_score'].astype(int)
     df['away_score'] = df['away_score'].astype(int)
@@ -57,10 +62,19 @@ def load_manual_results() -> pd.DataFrame:
 
 
 def get_all_results() -> pd.DataFrame:
-    """Retorna histórico + manuais, ordenados por data."""
+    """Retorna histórico + manuais, ordenados por data.
+
+    `pd.concat` rebaixa a coluna `date` para dtype `object` quando um dos
+    DataFrames está vazio (ex.: ainda não há `manual_results.csv`), o que
+    quebra qualquer `.dt` accessor usado depois (página Histórico, Evolução).
+    Forçamos o dtype de volta aqui — uma única vez, na fonte — em vez de em
+    cada página que consome este DataFrame.
+    """
     hist = load_historical_results()
     manual = load_manual_results()
     df = pd.concat([hist, manual], ignore_index=True)
+    df['date'] = pd.to_datetime(df['date'], errors='coerce')
+    df = df.dropna(subset=['date'])
     df = df.sort_values('date').reset_index(drop=True)
     return df
 

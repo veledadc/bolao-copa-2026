@@ -5,14 +5,15 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import streamlit as st
-import pandas as pd
 
 from src import data_loader
 from src.styles import get_css
+from src.sidebar import render_sidebar
 
 st.set_page_config(page_title='Histórico · Bolão 2026', page_icon='📋',
                    layout='wide', initial_sidebar_state='expanded')
 st.markdown(get_css(), unsafe_allow_html=True)
+render_sidebar()
 st.title('📋 Histórico de Partidas')
 
 
@@ -25,8 +26,9 @@ df = load()
 
 if df.empty:
     st.warning(
-        'Nenhum dado histórico encontrado. Execute `python scripts/download_data.py` '
-        'para baixar o histórico completo.'
+        '📂 **Nenhum dado histórico encontrado.**\n\n'
+        'Execute `python scripts/download_data.py` para baixar o histórico completo, '
+        'ou acesse **Registrar Resultado** para adicionar partidas manualmente.'
     )
     st.stop()
 

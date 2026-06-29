@@ -20,6 +20,30 @@ html, body { font-family:'Inter',system-ui,sans-serif!important; }
 /* hide Streamlit's auto-generated page list */
 [data-testid="stSidebarNav"]{display:none!important;}
 
+/* sidebar reopen control — must ALWAYS stay visible & on top so the menu
+   can be reopened after it collapses (auto on mobile, or manually) */
+[data-testid="stSidebarCollapsedControl"]{
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  position:fixed!important;
+  top:.55rem!important;
+  left:.6rem!important;
+  z-index:999999!important;
+  background:#0c1c2e!important;
+  border:1px solid #c9a902!important;
+  border-radius:6px!important;
+}
+[data-testid="stSidebarCollapsedControl"]:hover{
+  background:#13284a!important;
+}
+[data-testid="stSidebarCollapsedControl"] *{
+  color:#c9a902!important;
+  fill:#c9a902!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+
 /* sidebar */
 [data-testid="stSidebar"]{
   background:#060f1c!important;
@@ -187,5 +211,53 @@ hr{border-color:#0d2040!important;margin:1.5rem 0!important;}
 .bracket-team.winner{background:#0a2e1a;color:#4cff80;}
 .bracket-team.tbd{color:#243a52;font-style:italic;}
 .bracket-divider{border-top:1px solid #0d2040;margin:.2rem 0;}
+
+/* ── mobile responsive ── */
+@media (max-width:768px){
+  /* tighter content padding */
+  .main .block-container{padding:.5rem .7rem 2rem!important;max-width:100%!important;}
+
+  /* smaller headings */
+  h1{font-size:1.35rem!important;letter-spacing:-.01em!important;}
+  h2{font-size:1rem!important;}
+  h3{font-size:.9rem!important;}
+
+  /* compact section labels + stage chip */
+  .section-title{font-size:.75rem!important;padding:.22rem .6rem!important;margin:.8rem 0 .4rem!important;}
+  .stage-label{font-size:.62rem!important;padding:2px 10px!important;}
+
+  /* tighter nav bar */
+  nav{gap:.25rem!important;margin-top:.55rem!important;}
+  nav a{padding:.28rem .5rem!important;font-size:.7rem!important;gap:.2rem!important;}
+
+  /* compact metrics */
+  [data-testid="metric-container"]{padding:.55rem .75rem!important;}
+  [data-testid="stMetricValue"]{font-size:1.15rem!important;}
+  [data-testid="stMetricLabel"]{font-size:.68rem!important;}
+
+  /* match rows: smaller text */
+  .match-meta{font-size:.62rem!important;}
+  .match-team{font-size:.82rem!important;}
+  .match-score{font-size:.95rem!important;min-width:44px!important;padding:1px 5px!important;}
+
+  /* tv chips */
+  .tv-chip{font-size:.6rem!important;padding:1px 5px!important;}
+
+  /* buttons — smaller on mobile */
+  .stButton>button{font-size:.78rem!important;padding:.3rem .6rem!important;}
+
+  /* expander header */
+  .streamlit-expanderHeader{font-size:.83rem!important;padding:.45rem .7rem!important;}
+
+  /* dataframe — let it scroll horizontally */
+  [data-testid="stDataFrame"]{overflow-x:auto!important;}
+}
+
+/* very small screens (phones < 480px) */
+@media (max-width:480px){
+  h1{font-size:1.1rem!important;}
+  .main .block-container{padding:.4rem .5rem 1.5rem!important;}
+  nav a{font-size:.65rem!important;padding:.24rem .4rem!important;}
+}
 
 </style>"""

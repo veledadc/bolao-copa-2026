@@ -97,45 +97,50 @@ def generate_schedule() -> list[dict]:
 
 # ── Knockout schedule ────────────────────────────────────────────────────────
 # Each tuple: (id, phase, date, time_brt, slot_home, slot_away, stadium, city, country)
+# IDs usam a numeração oficial FIFA das partidas (Match 73-104). Horários
+# convertidos de ET para BRT (ET+1h, já que o Brasil não observa horário de
+# verão). Estrutura, datas e locais conferidos cruzando a tabela oficial da
+# FIFA (Wikipedia: 2026 FIFA World Cup knockout stage) com a cobertura da
+# Fox Sports e worldcupwiki.com em 29/06/2026 — três fontes independentes.
 _KO_ROWS = [
-    # Round of 32
-    ('R32_01','r32','04/Jul','16:00','1A','2B','AT&T Stadium','Dallas','EUA'),
-    ('R32_02','r32','04/Jul','22:00','1C','2D','MetLife Stadium','Nova York','EUA'),
-    ('R32_03','r32','05/Jul','16:00','1E','2F','SoFi Stadium','Los Angeles','EUA'),
-    ('R32_04','r32','05/Jul','22:00','1G','2H','Mercedes-Benz Stadium','Atlanta','EUA'),
-    ('R32_05','r32','06/Jul','16:00','1I','2J',"Levi's Stadium",'São Francisco','EUA'),
-    ('R32_06','r32','06/Jul','22:00','1K','2L','NRG Stadium','Houston','EUA'),
-    ('R32_07','r32','07/Jul','16:00','1B','2A','BC Place','Vancouver','Canadá'),
-    ('R32_08','r32','07/Jul','22:00','1D','2C','Estadio Azteca','Mexico City','México'),
-    ('R32_09','r32','08/Jul','16:00','1F','2E','Gillette Stadium','Boston','EUA'),
-    ('R32_10','r32','08/Jul','22:00','1H','2G','Arrowhead Stadium','Kansas City','EUA'),
-    ('R32_11','r32','09/Jul','16:00','1J','2I','Estadio BBVA','Monterrey','México'),
-    ('R32_12','r32','09/Jul','22:00','1L','2K','Hard Rock Stadium','Miami','EUA'),
-    ('R32_13','r32','10/Jul','16:00','3rd_1','3rd_5','Lincoln Financial Field','Filadélfia','EUA'),
-    ('R32_14','r32','10/Jul','22:00','3rd_2','3rd_6','Soldier Field','Chicago','EUA'),
-    ('R32_15','r32','11/Jul','16:00','3rd_3','3rd_7','BMO Field','Toronto','Canadá'),
-    ('R32_16','r32','11/Jul','22:00','3rd_4','3rd_8','SoFi Stadium','Los Angeles','EUA'),
-    # Round of 16
-    ('R16_01','r16','13/Jul','16:00','W_R32_01','W_R32_02','AT&T Stadium','Dallas','EUA'),
-    ('R16_02','r16','13/Jul','22:00','W_R32_03','W_R32_04','MetLife Stadium','Nova York','EUA'),
-    ('R16_03','r16','14/Jul','16:00','W_R32_05','W_R32_06',"Levi's Stadium",'São Francisco','EUA'),
-    ('R16_04','r16','14/Jul','22:00','W_R32_07','W_R32_08','Estadio Azteca','Mexico City','México'),
-    ('R16_05','r16','15/Jul','16:00','W_R32_09','W_R32_10','NRG Stadium','Houston','EUA'),
-    ('R16_06','r16','15/Jul','22:00','W_R32_11','W_R32_12','Gillette Stadium','Boston','EUA'),
-    ('R16_07','r16','16/Jul','16:00','W_R32_13','W_R32_14','SoFi Stadium','Los Angeles','EUA'),
-    ('R16_08','r16','16/Jul','22:00','W_R32_15','W_R32_16','Mercedes-Benz Stadium','Atlanta','EUA'),
-    # Quarterfinals
-    ('QF_01','qf','18/Jul','16:00','W_R16_01','W_R16_02','MetLife Stadium','Nova York','EUA'),
-    ('QF_02','qf','18/Jul','22:00','W_R16_03','W_R16_04','AT&T Stadium','Dallas','EUA'),
-    ('QF_03','qf','19/Jul','16:00','W_R16_05','W_R16_06','SoFi Stadium','Los Angeles','EUA'),
-    ('QF_04','qf','19/Jul','22:00','W_R16_07','W_R16_08','NRG Stadium','Houston','EUA'),
-    # Semifinals
-    ('SF_01','sf','22/Jul','22:00','W_QF_01','W_QF_02','MetLife Stadium','Nova York','EUA'),
-    ('SF_02','sf','23/Jul','22:00','W_QF_03','W_QF_04','AT&T Stadium','Dallas','EUA'),
-    # Third place
-    ('TP',  'tp','25/Jul','16:00','L_SF_01','L_SF_02','Arrowhead Stadium','Kansas City','EUA'),
-    # Final
-    ('F', 'final','26/Jul','17:00','W_SF_01','W_SF_02','MetLife Stadium','Nova York','EUA'),
+    # Rodada de 32 (Match 73-88) — 28/Jun a 03/Jul
+    ('M73','r32','28/Jun','16:00','2A','2B','SoFi Stadium','Los Angeles','EUA'),
+    ('M76','r32','29/Jun','14:00','1C','2F','NRG Stadium','Houston','EUA'),
+    ('M74','r32','29/Jun','17:30','1E','3D','Gillette Stadium','Boston','EUA'),
+    ('M75','r32','29/Jun','22:00','1F','2C','Estadio BBVA','Monterrey','México'),
+    ('M78','r32','30/Jun','14:00','2E','2I','AT&T Stadium','Dallas','EUA'),
+    ('M77','r32','30/Jun','18:00','1I','3F','MetLife Stadium','Nova York','EUA'),
+    ('M79','r32','30/Jun','22:00','1A','3E','Estadio Azteca','Mexico City','México'),
+    ('M80','r32','01/Jul','13:00','1L','3K','Mercedes-Benz Stadium','Atlanta','EUA'),
+    ('M82','r32','01/Jul','17:00','1G','3I','Lumen Field','Seattle','EUA'),
+    ('M81','r32','01/Jul','21:00','1D','3B',"Levi's Stadium",'São Francisco','EUA'),
+    ('M84','r32','02/Jul','16:00','1H','2J','SoFi Stadium','Los Angeles','EUA'),
+    ('M83','r32','02/Jul','20:00','2K','2L','BMO Field','Toronto','Canadá'),
+    ('M85','r32','03/Jul','00:00','1B','3J','BC Place','Vancouver','Canadá'),
+    ('M88','r32','03/Jul','15:00','2D','2G','AT&T Stadium','Dallas','EUA'),
+    ('M86','r32','03/Jul','19:00','1J','2H','Hard Rock Stadium','Miami','EUA'),
+    ('M87','r32','03/Jul','22:30','1K','3L','Arrowhead Stadium','Kansas City','EUA'),
+    # Oitavas de Final (Match 89-96) — 04 a 07/Jul
+    ('M90','r16','04/Jul','14:00','W_M73','W_M75','NRG Stadium','Houston','EUA'),
+    ('M89','r16','04/Jul','18:00','W_M74','W_M77','Lincoln Financial Field','Filadélfia','EUA'),
+    ('M91','r16','05/Jul','17:00','W_M76','W_M78','MetLife Stadium','Nova York','EUA'),
+    ('M92','r16','05/Jul','21:00','W_M79','W_M80','Estadio Azteca','Mexico City','México'),
+    ('M93','r16','06/Jul','16:00','W_M83','W_M84','AT&T Stadium','Dallas','EUA'),
+    ('M94','r16','06/Jul','21:00','W_M81','W_M82','Lumen Field','Seattle','EUA'),
+    ('M95','r16','07/Jul','13:00','W_M86','W_M88','Mercedes-Benz Stadium','Atlanta','EUA'),
+    ('M96','r16','07/Jul','17:00','W_M85','W_M87','BC Place','Vancouver','Canadá'),
+    # Quartas de Final (Match 97-100) — 09 a 11/Jul
+    ('M97', 'qf','09/Jul','17:00','W_M89','W_M90','Gillette Stadium','Boston','EUA'),
+    ('M98', 'qf','10/Jul','16:00','W_M93','W_M94','SoFi Stadium','Los Angeles','EUA'),
+    ('M99', 'qf','11/Jul','18:00','W_M91','W_M92','Hard Rock Stadium','Miami','EUA'),
+    ('M100','qf','11/Jul','22:00','W_M95','W_M96','Arrowhead Stadium','Kansas City','EUA'),
+    # Semifinais (Match 101-102) — 14 e 15/Jul
+    ('M101','sf','14/Jul','16:00','W_M97','W_M98','AT&T Stadium','Dallas','EUA'),
+    ('M102','sf','15/Jul','16:00','W_M99','W_M100','Mercedes-Benz Stadium','Atlanta','EUA'),
+    # Disputa de 3º Lugar (Match 103) — 18/Jul
+    ('M103','tp','18/Jul','18:00','L_M101','L_M102','Hard Rock Stadium','Miami','EUA'),
+    # Final (Match 104) — 19/Jul
+    ('M104','final','19/Jul','16:00','W_M101','W_M102','MetLife Stadium','Nova York','EUA'),
 ]
 
 
@@ -162,19 +167,91 @@ def load_official() -> dict:
         return json.load(f)
 
 
-def save_official_result(match_id: str, home_score: int, away_score: int) -> None:
+def save_official_result(match_id: str, home_score: int, away_score: int,
+                         home: str | None = None, away: str | None = None) -> None:
     official = load_official()
     if match_id in official and official[match_id].get('locked'):
         raise ValueError(f'{match_id} already locked')
-    official[match_id] = {
+    entry = {
         'home_score': int(home_score),
         'away_score': int(away_score),
         'locked': True,
         'recorded_at': datetime.now().isoformat(),
     }
+    if home:
+        entry['home'] = home
+    if away:
+        entry['away'] = away
+    official[match_id] = entry
     os.makedirs('data', exist_ok=True)
     with open(OFFICIAL_FILE, 'w', encoding='utf-8') as f:
         json.dump(official, f, indent=2)
+
+
+def update_official_result(match_id: str, home_score: int, away_score: int) -> None:
+    """Overwrite a previously locked result (used by the edit panel)."""
+    official = load_official()
+    existing = official.get(match_id, {})
+    existing.update({
+        'home_score': int(home_score),
+        'away_score': int(away_score),
+        'locked': True,
+        'updated_at': datetime.now().isoformat(),
+    })
+    official[match_id] = existing
+    os.makedirs('data', exist_ok=True)
+    with open(OFFICIAL_FILE, 'w', encoding='utf-8') as f:
+        json.dump(official, f, indent=2)
+
+
+def delete_official_result(match_id: str) -> None:
+    """Remove a recorded result entirely (used by the edit panel)."""
+    official = load_official()
+    official.pop(match_id, None)
+    os.makedirs('data', exist_ok=True)
+    with open(OFFICIAL_FILE, 'w', encoding='utf-8') as f:
+        json.dump(official, f, indent=2)
+
+
+def rebuild_elo_from_officials() -> dict:
+    """
+    Rebuild ELO state from historical data + manual results, then re-apply
+    all Copa 2026 official results in recorded order.
+    Returns the new state (also saves it to disk).
+    """
+    from src import state_manager as sm
+
+    base_state = sm.get_or_build_state(force_rebuild=True)
+
+    official = load_official()
+    if not official:
+        return base_state
+
+    schedule = generate_schedule()
+    id_to_teams: dict[str, tuple[str, str]] = {}
+    for m in schedule:
+        id_to_teams[m['id']] = (m['home'], m['away'])
+
+    # Sort by recorded_at so we re-apply in original order
+    sorted_items = sorted(
+        official.items(),
+        key=lambda kv: kv[1].get('recorded_at', ''),
+    )
+
+    state = base_state
+    for mid, res in sorted_items:
+        # Try team names stored in the record first, then schedule lookup
+        home = res.get('home') or id_to_teams.get(mid, (None, None))[0]
+        away = res.get('away') or id_to_teams.get(mid, (None, None))[1]
+        if home and away:
+            state = sm.apply_result(
+                state, home, away,
+                int(res['home_score']), int(res['away_score']),
+                'FIFA World Cup', neutral=True,
+            )
+
+    sm.save_state(state)
+    return state
 
 
 # ── Group standings computation ───────────────────────────────────────────────

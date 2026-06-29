@@ -10,10 +10,12 @@ from config import COPA_2026_GROUPS, K_FACTORS
 from src import data_loader, state_manager as sm
 from src.features import form_summary, team_feature_summary
 from src.styles import get_css
+from src.sidebar import render_sidebar
 
 st.set_page_config(page_title='Novo Resultado · Bolão 2026', page_icon='➕',
                    layout='centered', initial_sidebar_state='expanded')
 st.markdown(get_css(), unsafe_allow_html=True)
+render_sidebar()
 st.title('➕ Cadastrar Novo Resultado')
 st.markdown(
     'Ao salvar, o **Elo**, a **forma recente** e o **histórico de Copa** '
@@ -22,11 +24,11 @@ st.markdown(
 
 
 @st.cache_data(show_spinner='Carregando estado...')
-def _get_state():
+def _get_state(_mtime: float):
     return sm.get_or_build_state()
 
 
-state     = _get_state()
+state     = _get_state(sm.state_file_mtime())
 all_teams = sorted(set(
     t for teams in COPA_2026_GROUPS.values() for t in teams
 ))
