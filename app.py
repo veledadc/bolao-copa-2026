@@ -241,16 +241,20 @@ if n_sims_applied > 0 or eliminated:
 
 st.markdown('<br>', unsafe_allow_html=True)
 
-# Top-10 bar chart
+# Bar chart — mostra só os times ainda vivos (máx 10 na fase de grupos)
+_alive_count = sum(1 for _, v in sorted_teams if v['campeao'] > 0)
+_n_show = min(_alive_count, 10)
+_chart_h = max(200, _n_show * 44 + 60)
+
 df_chart = pd.DataFrame([
     {'Seleção': t, 'Campeão (%)': round(v['campeao'] * 100, 1)}
-    for t, v in sorted_teams[:10]
+    for t, v in sorted_teams[:_n_show]
 ])
 fig = px.bar(
     df_chart, x='Campeão (%)', y='Seleção', orientation='h',
     color='Campeão (%)', color_continuous_scale=['#1a3a6a', '#0055e5', '#c9a902'],
-    text='Campeão (%)', title='Top 10 Favoritos ao Título',
-    height=390,
+    text='Campeão (%)', title='Favoritos ao Título',
+    height=_chart_h,
 )
 fig.update_traces(texttemplate='%{text:.1f}%', textposition='auto')
 fig.update_layout(

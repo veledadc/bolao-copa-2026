@@ -716,5 +716,13 @@
     "recorded_at": "2026-07-04T14:00:00.000000",
     "home": "Canada",
     "away": "Morocco"
+  },
+  "M89": {
+    "home_score": 0,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-07-04T18:00:00.000000",
+    "home": "Paraguay",
+    "away": "France"
   }
 }
