@@ -192,6 +192,18 @@ def save_official_result(match_id: str, home_score: int, away_score: int,
         json.dump(official, f, indent=2)
 
 
+def add_penalty_to_official(match_id: str, pen_home: int, pen_away: int) -> None:
+    """Adiciona/atualiza pênaltis em um resultado oficial já gravado (empate)."""
+    official = load_official()
+    if match_id not in official:
+        raise ValueError(f'{match_id} not found')
+    official[match_id]['pen_home'] = int(pen_home)
+    official[match_id]['pen_away'] = int(pen_away)
+    os.makedirs('data', exist_ok=True)
+    with open(OFFICIAL_FILE, 'w', encoding='utf-8') as f:
+        json.dump(official, f, indent=2)
+
+
 def update_official_result(match_id: str, home_score: int, away_score: int) -> None:
     """Overwrite a previously locked result (used by the edit panel)."""
     official = load_official()

@@ -626,6 +626,39 @@ def _render_ko_match(m: dict, ko_off: dict, ko_sim: dict,
                 st.markdown(
                     '<div style="text-align:center;padding-top:.5rem;font-size:.8rem;'
                     'color:#00aa55">🔒 Oficial</div>', unsafe_allow_html=True)
+        # Empate sem pênaltis: exibe barra de registro
+        if hs == as_ and (pen_h is None or pen_a is None):
+            st.markdown(
+                '<div style="background:#071a2e;border-left:3px solid #c9a902;'
+                'padding:.3rem .75rem;border-radius:0 6px 6px 0;font-size:.8rem;'
+                'color:#8eaacc;margin:.2rem 0">⚽ Empate — registre o placar de pênaltis:</div>',
+                unsafe_allow_html=True)
+            _pp1, _pp2, _pp3 = st.columns([2, 2, 2])
+            with _pp1:
+                st.number_input(f'Pên. {home_lbl}', 0, 30, step=1, key=f'pen_add_h_{mid}')
+            with _pp2:
+                st.number_input(f'Pên. {away_lbl}', 0, 30, step=1, key=f'pen_add_a_{mid}')
+            with _pp3:
+                if st.button('💾 Salvar Pênaltis', key=f'savepen_{mid}',
+                             type='primary', use_container_width=True):
+                    _ph = int(st.session_state.get(f'pen_add_h_{mid}', 0))
+                    _pa = int(st.session_state.get(f'pen_add_a_{mid}', 0))
+                    cm.add_penalty_to_official(mid, _ph, _pa)
+                    _load_state.clear()
+                    _run_sim.clear()
+                    st.session_state['state_dirty'] = True
+                    st.rerun()
+        # Empate com pênaltis: exibe resultado completo
+        elif hs == as_ and pen_h is not None and pen_a is not None:
+            pen_winner = home_lbl if pen_h > pen_a else away_lbl
+            st.markdown(
+                f'<div style="background:#071a2e;border-left:3px solid #c9a902;'
+                f'padding:.3rem .75rem;border-radius:0 6px 6px 0;font-size:.82rem;margin:.2rem 0">'
+                f'<span style="color:#c9a902;font-weight:700">⚽ Pênaltis:</span> '
+                f'<span style="color:#fff;font-weight:700">{home_lbl} {pen_h} × {pen_a} {away_lbl}</span>'
+                f'<span style="color:#00aa55;font-size:.75rem;margin-left:.6rem">'
+                f'→ {pen_winner} avança</span></div>',
+                unsafe_allow_html=True)
     else:
         c_h, c_hs, c_x, c_as, c_a, c_sim, c_grv = st.columns([3, 1.1, 0.4, 1.1, 3, 1.6, 1.6])
         with c_h:
