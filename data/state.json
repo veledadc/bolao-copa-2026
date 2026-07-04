@@ -1,45 +1,45 @@
 {
   "elos": {
-    "Argentina": 2138.27,
-    "France": 2111.37,
-    "England": 2040.91,
+    "Argentina": 2143.89,
+    "France": 2119.5,
+    "England": 2053.56,
     "Brazil": 2051.49,
-    "Portugal": 1987.42,
-    "Spain": 2122.04,
-    "Germany": 1963.63,
-    "Netherlands": 1994.22,
-    "Belgium": 1934.23,
-    "Croatia": 1963.41,
+    "Portugal": 2015.35,
+    "Spain": 2132.95,
+    "Germany": 1960.43,
+    "Netherlands": 1994.19,
+    "Belgium": 1959.41,
+    "Croatia": 1935.48,
     "Uruguay": 1893.26,
-    "Colombia": 2012.05,
-    "Morocco": 1993.92,
+    "Colombia": 2021.74,
+    "Morocco": 1993.95,
     "Japan": 1943.4,
-    "Norway": 1943.41,
-    "USA": 1844.65,
-    "Senegal": 1877.88,
-    "Sweden": 1789.32,
-    "Switzerland": 1930.56,
+    "Norway": 1964.98,
+    "USA": 1859.8,
+    "Senegal": 1852.7,
+    "Sweden": 1781.19,
+    "Switzerland": 1955.99,
     "Turkey": 1923.79,
-    "Mexico": 1983.43,
-    "Ecuador": 1975.7,
+    "Mexico": 2012.76,
+    "Ecuador": 1946.37,
     "South Korea": 1827.21,
-    "Austria": 1860.79,
-    "Algeria": 1877.26,
-    "Australia": 1901.8,
+    "Austria": 1849.88,
+    "Algeria": 1851.83,
+    "Australia": 1896.65,
     "Iran": 1875.61,
-    "Ivory Coast": 1843.11,
+    "Ivory Coast": 1821.54,
     "Canada": 1857.45,
     "Tunisia": 1720.04,
     "Scotland": 1815.82,
-    "Bosnia Herzegovina": 1656.15,
+    "Bosnia Herzegovina": 1641.0,
     "Czechia": 1595.92,
-    "Egypt": 1841.54,
+    "Egypt": 1846.69,
     "Saudi Arabia": 1736.97,
-    "Ghana": 1725.97,
-    "Paraguay": 1926.42,
-    "DR Congo": 1811.56,
+    "Ghana": 1716.28,
+    "Paraguay": 1929.62,
+    "DR Congo": 1798.91,
     "South Africa": 1670.62,
-    "Cape Verde": 1744.13,
+    "Cape Verde": 1738.51,
     "Jordan": 1724.08,
     "Panama": 1765.77,
     "Qatar": 1608.05,
@@ -358,7 +358,6 @@
     ],
     "Colombia": [
       "L",
-      "L",
       "D",
       "D",
       "D",
@@ -366,7 +365,8 @@
       "W",
       "W",
       "W",
-      "D"
+      "D",
+      "W"
     ],
     "Uruguay": [
       "D",
@@ -437,8 +437,8 @@
       "W",
       "W",
       "W",
-      "W",
-      "L"
+      "L",
+      "W"
     ],
     "Malta": [
       "W",
@@ -525,7 +525,6 @@
       "D"
     ],
     "Algeria": [
-      "W",
       "D",
       "W",
       "W",
@@ -534,7 +533,8 @@
       "L",
       "L",
       "W",
-      "D"
+      "D",
+      "L"
     ],
     "Nigeria": [
       "D",
@@ -551,24 +551,24 @@
     "Ivory Coast": [
       "W",
       "W",
-      "W",
       "D",
       "W",
       "W",
       "L",
       "W",
       "L",
-      "W"
+      "W",
+      "L"
     ],
     "Egypt": [
       "W",
-      "W",
       "D",
       "W",
       "W",
       "L",
       "D",
       "W",
+      "D",
       "D",
       "D"
     ],
@@ -597,7 +597,6 @@
       "L"
     ],
     "Senegal": [
-      "W",
       "D",
       "W",
       "W",
@@ -606,7 +605,8 @@
       "L",
       "L",
       "L",
-      "W"
+      "W",
+      "L"
     ],
     "Sint Maarten": [
       "W",
@@ -899,8 +899,8 @@
     "Mexico": [
       "W",
       "W",
-      "W",
       "D",
+      "W",
       "W",
       "W",
       "W",
@@ -960,10 +960,10 @@
       "W",
       "W",
       "W",
-      "W",
       "D",
       "W",
       "L",
+      "W",
       "W",
       "W",
       "W"
@@ -984,13 +984,13 @@
       "W",
       "W",
       "W",
-      "W",
       "L",
       "W",
       "D",
       "W",
       "L",
-      "D"
+      "D",
+      "L"
     ],
     "Romania": [
       "W",
@@ -1020,25 +1020,25 @@
       "L",
       "L",
       "L",
-      "L",
       "D",
       "W",
       "W",
       "W",
       "L",
-      "D"
+      "D",
+      "L"
     ],
     "Germany": [
       "L",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
       "L",
-      "W",
-      "W",
-      "W",
-      "W",
-      "W",
-      "W",
-      "W",
-      "L"
+      "D"
     ],
     "Yugoslavia": [
       "W",
@@ -1084,8 +1084,8 @@
       "W",
       "W",
       "W",
-      "W",
       "D",
+      "W",
       "W"
     ],
     "Republic of Ireland": [
@@ -1103,17 +1103,16 @@
     "Belgium": [
       "W",
       "W",
-      "W",
       "D",
       "W",
       "D",
       "W",
       "D",
       "D",
+      "W",
       "W"
     ],
     "Netherlands": [
-      "W",
       "D",
       "W",
       "W",
@@ -1122,10 +1121,10 @@
       "W",
       "D",
       "W",
-      "W"
+      "W",
+      "D"
     ],
     "Spain": [
-      "D",
       "W",
       "W",
       "W",
@@ -1133,6 +1132,7 @@
       "W",
       "D",
       "D",
+      "W",
       "W",
       "W"
     ],
@@ -1245,7 +1245,6 @@
       "L"
     ],
     "DR Congo": [
-      "W",
       "D",
       "W",
       "D",
@@ -1254,7 +1253,8 @@
       "W",
       "L",
       "D",
-      "W"
+      "W",
+      "L"
     ],
     "Tanzania": [
       "L",
@@ -1425,7 +1425,6 @@
       "L"
     ],
     "Morocco": [
-      "W",
       "D",
       "W",
       "W",
@@ -1434,7 +1433,8 @@
       "W",
       "W",
       "D",
-      "W"
+      "W",
+      "D"
     ],
     "Niger": [
       "L",
@@ -1497,7 +1497,6 @@
       "L"
     ],
     "Ghana": [
-      "L",
       "W",
       "D",
       "W",
@@ -1506,6 +1505,7 @@
       "L",
       "W",
       "D",
+      "L",
       "L"
     ],
     "Zimbabwe": [
@@ -1524,8 +1524,8 @@
       "W",
       "W",
       "W",
-      "W",
       "D",
+      "W",
       "W",
       "W",
       "W",
@@ -1557,7 +1557,6 @@
       "W"
     ],
     "Switzerland": [
-      "L",
       "W",
       "W",
       "W",
@@ -1566,7 +1565,8 @@
       "D",
       "W",
       "W",
-      "D"
+      "D",
+      "W"
     ],
     "Bulgaria": [
       "L",
@@ -1593,7 +1593,6 @@
       "D"
     ],
     "Portugal": [
-      "D",
       "W",
       "W",
       "W",
@@ -1602,7 +1601,8 @@
       "W",
       "W",
       "D",
-      "D"
+      "D",
+      "W"
     ],
     "Singapore": [
       "W",
@@ -2032,8 +2032,8 @@
       "W",
       "W",
       "W",
-      "W",
       "L",
+      "D",
       "D"
     ],
     "Anguilla": [
@@ -2073,7 +2073,6 @@
       "L"
     ],
     "Paraguay": [
-      "W",
       "D",
       "W",
       "L",
@@ -2082,6 +2081,7 @@
       "D",
       "L",
       "W",
+      "D",
       "D"
     ],
     "Greenland": [
@@ -2182,7 +2182,6 @@
     ],
     "Ecuador": [
       "W",
-      "W",
       "D",
       "D",
       "D",
@@ -2190,7 +2189,8 @@
       "W",
       "L",
       "D",
-      "W"
+      "W",
+      "L"
     ],
     "Guam": [
       "L",
@@ -2264,7 +2264,6 @@
       "L"
     ],
     "Cape Verde": [
-      "W",
       "D",
       "W",
       "D",
@@ -2273,7 +2272,8 @@
       "D",
       "D",
       "D",
-      "D"
+      "D",
+      "L"
     ],
     "Guinea-Bissau": [
       "L",
@@ -2674,14 +2674,14 @@
     "Croatia": [
       "W",
       "W",
-      "W",
       "D",
       "W",
       "W",
       "W",
       "L",
       "W",
-      "W"
+      "W",
+      "L"
     ],
     "Czech Republic": [
       "W",
@@ -3760,12 +3760,14 @@
     "USA": [
       "W",
       "W",
-      "L"
+      "L",
+      "W"
     ],
     "Bosnia Herzegovina": [
       "W",
       "L",
-      "D"
+      "D",
+      "L"
     ],
     "Curacao": [
       "L",
@@ -3775,14 +3777,14 @@
   },
   "copa_history": {
     "Argentina": {
-      "matches": 50,
-      "wins": 28,
+      "matches": 51,
+      "wins": 29,
       "draws": 11,
       "losses": 11,
-      "goals_for": 83,
-      "goals_against": 47,
-      "win_rate": 0.56,
-      "goal_ratio": 1.766,
+      "goals_for": 86,
+      "goals_against": 49,
+      "win_rate": 0.5686,
+      "goal_ratio": 1.755,
       "titles": 3,
       "experience_tier": "elite"
     },
@@ -3811,16 +3813,16 @@
       "experience_tier": "experienced"
     },
     "Austria": {
-      "matches": 9,
+      "matches": 10,
       "wins": 2,
       "draws": 3,
-      "losses": 4,
+      "losses": 5,
       "goals_for": 11,
-      "goals_against": 13,
-      "win_rate": 0.2222,
-      "goal_ratio": 0.846,
+      "goals_against": 16,
+      "win_rate": 0.2,
+      "goal_ratio": 0.688,
       "titles": 0,
-      "experience_tier": "limited"
+      "experience_tier": "moderate"
     },
     "Russia": {
       "matches": 17,
@@ -3859,14 +3861,14 @@
       "experience_tier": "limited"
     },
     "Colombia": {
-      "matches": 22,
-      "wins": 11,
+      "matches": 23,
+      "wins": 12,
       "draws": 3,
       "losses": 8,
-      "goals_for": 31,
+      "goals_for": 32,
       "goals_against": 20,
-      "win_rate": 0.5,
-      "goal_ratio": 1.55,
+      "win_rate": 0.5217,
+      "goal_ratio": 1.6,
       "titles": 0,
       "experience_tier": "moderate"
     },
@@ -3883,26 +3885,26 @@
       "experience_tier": "elite"
     },
     "Sweden": {
-      "matches": 26,
+      "matches": 27,
       "wins": 9,
       "draws": 8,
-      "losses": 9,
+      "losses": 10,
       "goals_for": 39,
-      "goals_against": 34,
-      "win_rate": 0.3462,
-      "goal_ratio": 1.147,
+      "goals_against": 37,
+      "win_rate": 0.3333,
+      "goal_ratio": 1.054,
       "titles": 0,
       "experience_tier": "experienced"
     },
     "Germany": {
-      "matches": 54,
+      "matches": 55,
       "wins": 36,
-      "draws": 8,
+      "draws": 9,
       "losses": 10,
-      "goals_for": 112,
-      "goals_against": 49,
-      "win_rate": 0.6667,
-      "goal_ratio": 2.286,
+      "goals_for": 113,
+      "goals_against": 50,
+      "win_rate": 0.6545,
+      "goal_ratio": 2.26,
       "titles": 4,
       "experience_tier": "elite"
     },
@@ -3967,14 +3969,14 @@
       "experience_tier": "limited"
     },
     "England": {
-      "matches": 43,
-      "wins": 19,
+      "matches": 44,
+      "wins": 20,
       "draws": 14,
       "losses": 10,
-      "goals_for": 63,
-      "goals_against": 38,
-      "win_rate": 0.4419,
-      "goal_ratio": 1.658,
+      "goals_for": 65,
+      "goals_against": 39,
+      "win_rate": 0.4545,
+      "goal_ratio": 1.667,
       "titles": 1,
       "experience_tier": "experienced"
     },
@@ -3991,14 +3993,14 @@
       "experience_tier": "moderate"
     },
     "Belgium": {
-      "matches": 33,
-      "wins": 17,
+      "matches": 34,
+      "wins": 18,
       "draws": 8,
       "losses": 8,
-      "goals_for": 48,
-      "goals_against": 31,
-      "win_rate": 0.5152,
-      "goal_ratio": 1.548,
+      "goals_for": 51,
+      "goals_against": 33,
+      "win_rate": 0.5294,
+      "goal_ratio": 1.545,
       "titles": 0,
       "experience_tier": "experienced"
     },
@@ -4015,28 +4017,28 @@
       "experience_tier": "experienced"
     },
     "Netherlands": {
-      "matches": 42,
+      "matches": 43,
       "wins": 24,
-      "draws": 12,
+      "draws": 13,
       "losses": 6,
-      "goals_for": 74,
-      "goals_against": 37,
-      "win_rate": 0.5714,
-      "goal_ratio": 2.0,
+      "goals_for": 75,
+      "goals_against": 38,
+      "win_rate": 0.5581,
+      "goal_ratio": 1.974,
       "titles": 0,
       "experience_tier": "experienced"
     },
     "Egypt": {
-      "matches": 9,
+      "matches": 10,
       "wins": 1,
-      "draws": 4,
+      "draws": 5,
       "losses": 4,
-      "goals_for": 8,
-      "goals_against": 11,
-      "win_rate": 0.1111,
-      "goal_ratio": 0.727,
+      "goals_for": 9,
+      "goals_against": 12,
+      "win_rate": 0.1,
+      "goal_ratio": 0.75,
       "titles": 0,
-      "experience_tier": "limited"
+      "experience_tier": "moderate"
     },
     "Uruguay": {
       "matches": 29,
@@ -4051,14 +4053,14 @@
       "experience_tier": "experienced"
     },
     "Spain": {
-      "matches": 42,
-      "wins": 22,
+      "matches": 43,
+      "wins": 23,
       "draws": 12,
       "losses": 8,
-      "goals_for": 76,
+      "goals_for": 79,
       "goals_against": 41,
-      "win_rate": 0.5238,
-      "goal_ratio": 1.854,
+      "win_rate": 0.5349,
+      "goal_ratio": 1.927,
       "titles": 1,
       "experience_tier": "experienced"
     },
@@ -4075,50 +4077,50 @@
       "experience_tier": "limited"
     },
     "Switzerland": {
-      "matches": 26,
-      "wins": 11,
+      "matches": 27,
+      "wins": 12,
       "draws": 7,
       "losses": 8,
-      "goals_for": 34,
+      "goals_for": 36,
       "goals_against": 32,
-      "win_rate": 0.4231,
-      "goal_ratio": 1.062,
+      "win_rate": 0.4444,
+      "goal_ratio": 1.125,
       "titles": 0,
       "experience_tier": "experienced"
     },
     "Morocco": {
-      "matches": 19,
+      "matches": 20,
       "wins": 6,
-      "draws": 5,
+      "draws": 6,
       "losses": 8,
-      "goals_for": 21,
-      "goals_against": 22,
-      "win_rate": 0.3158,
-      "goal_ratio": 0.955,
+      "goals_for": 22,
+      "goals_against": 23,
+      "win_rate": 0.3,
+      "goal_ratio": 0.957,
       "titles": 0,
       "experience_tier": "moderate"
     },
     "Norway": {
-      "matches": 10,
-      "wins": 4,
+      "matches": 11,
+      "wins": 5,
       "draws": 3,
       "losses": 3,
-      "goals_for": 14,
-      "goals_against": 13,
-      "win_rate": 0.4,
-      "goal_ratio": 1.077,
+      "goals_for": 16,
+      "goals_against": 14,
+      "win_rate": 0.4545,
+      "goal_ratio": 1.143,
       "titles": 0,
       "experience_tier": "moderate"
     },
     "Mexico": {
-      "matches": 34,
-      "wins": 14,
+      "matches": 35,
+      "wins": 15,
       "draws": 9,
       "losses": 11,
-      "goals_for": 41,
+      "goals_for": 43,
       "goals_against": 37,
-      "win_rate": 0.4118,
-      "goal_ratio": 1.108,
+      "win_rate": 0.4286,
+      "goal_ratio": 1.162,
       "titles": 0,
       "experience_tier": "experienced"
     },
@@ -4183,14 +4185,14 @@
       "experience_tier": "moderate"
     },
     "France": {
-      "matches": 42,
-      "wins": 27,
+      "matches": 43,
+      "wins": 28,
       "draws": 9,
       "losses": 6,
-      "goals_for": 75,
+      "goals_for": 78,
       "goals_against": 31,
-      "win_rate": 0.6429,
-      "goal_ratio": 2.419,
+      "win_rate": 0.6512,
+      "goal_ratio": 2.516,
       "titles": 2,
       "experience_tier": "experienced"
     },
@@ -4207,14 +4209,14 @@
       "experience_tier": "moderate"
     },
     "Paraguay": {
-      "matches": 19,
+      "matches": 20,
       "wins": 5,
-      "draws": 7,
+      "draws": 8,
       "losses": 7,
-      "goals_for": 16,
-      "goals_against": 17,
-      "win_rate": 0.2632,
-      "goal_ratio": 0.941,
+      "goals_for": 17,
+      "goals_against": 18,
+      "win_rate": 0.25,
+      "goal_ratio": 0.944,
       "titles": 0,
       "experience_tier": "moderate"
     },
@@ -4267,14 +4269,14 @@
       "experience_tier": "limited"
     },
     "Croatia": {
-      "matches": 33,
+      "matches": 34,
       "wins": 15,
       "draws": 8,
-      "losses": 10,
-      "goals_for": 48,
-      "goals_against": 38,
-      "win_rate": 0.4545,
-      "goal_ratio": 1.263,
+      "losses": 11,
+      "goals_for": 49,
+      "goals_against": 40,
+      "win_rate": 0.4412,
+      "goal_ratio": 1.225,
       "titles": 0,
       "experience_tier": "experienced"
     },
@@ -4303,14 +4305,14 @@
       "experience_tier": "moderate"
     },
     "Senegal": {
-      "matches": 15,
+      "matches": 16,
       "wins": 6,
       "draws": 3,
-      "losses": 6,
-      "goals_for": 24,
-      "goals_against": 23,
-      "win_rate": 0.4,
-      "goal_ratio": 1.043,
+      "losses": 7,
+      "goals_for": 26,
+      "goals_against": 26,
+      "win_rate": 0.375,
+      "goal_ratio": 1.0,
       "titles": 0,
       "experience_tier": "moderate"
     },
@@ -4339,14 +4341,14 @@
       "experience_tier": "moderate"
     },
     "Ecuador": {
-      "matches": 16,
+      "matches": 17,
       "wins": 6,
       "draws": 3,
-      "losses": 7,
+      "losses": 8,
       "goals_for": 16,
-      "goals_against": 16,
-      "win_rate": 0.375,
-      "goal_ratio": 1.0,
+      "goals_against": 18,
+      "win_rate": 0.3529,
+      "goal_ratio": 0.889,
       "titles": 0,
       "experience_tier": "moderate"
     },
@@ -4375,26 +4377,26 @@
       "experience_tier": "limited"
     },
     "Portugal": {
-      "matches": 29,
-      "wins": 12,
+      "matches": 30,
+      "wins": 13,
       "draws": 8,
       "losses": 9,
-      "goals_for": 48,
-      "goals_against": 30,
-      "win_rate": 0.4138,
-      "goal_ratio": 1.6,
+      "goals_for": 50,
+      "goals_against": 31,
+      "win_rate": 0.4333,
+      "goal_ratio": 1.613,
       "titles": 0,
       "experience_tier": "experienced"
     },
     "Ivory Coast": {
-      "matches": 12,
+      "matches": 13,
       "wins": 5,
       "draws": 1,
-      "losses": 6,
-      "goals_for": 17,
-      "goals_against": 16,
-      "win_rate": 0.4167,
-      "goal_ratio": 1.062,
+      "losses": 7,
+      "goals_for": 18,
+      "goals_against": 18,
+      "win_rate": 0.3846,
+      "goal_ratio": 1.0,
       "titles": 0,
       "experience_tier": "moderate"
     },
@@ -4423,26 +4425,26 @@
       "experience_tier": "limited"
     },
     "Australia": {
-      "matches": 20,
+      "matches": 21,
       "wins": 5,
-      "draws": 4,
+      "draws": 5,
       "losses": 11,
-      "goals_for": 19,
-      "goals_against": 34,
-      "win_rate": 0.25,
-      "goal_ratio": 0.559,
+      "goals_for": 20,
+      "goals_against": 35,
+      "win_rate": 0.2381,
+      "goal_ratio": 0.571,
       "titles": 0,
       "experience_tier": "moderate"
     },
     "Ghana": {
-      "matches": 18,
+      "matches": 19,
       "wins": 6,
       "draws": 4,
-      "losses": 8,
+      "losses": 9,
       "goals_for": 20,
-      "goals_against": 25,
-      "win_rate": 0.3333,
-      "goal_ratio": 0.8,
+      "goals_against": 26,
+      "win_rate": 0.3158,
+      "goal_ratio": 0.769,
       "titles": 0,
       "experience_tier": "moderate"
     },
@@ -4483,14 +4485,14 @@
       "experience_tier": "limited"
     },
     "Algeria": {
-      "matches": 10,
+      "matches": 11,
       "wins": 2,
       "draws": 3,
-      "losses": 5,
+      "losses": 6,
       "goals_for": 12,
-      "goals_against": 16,
-      "win_rate": 0.2,
-      "goal_ratio": 0.75,
+      "goals_against": 18,
+      "win_rate": 0.1818,
+      "goal_ratio": 0.667,
       "titles": 0,
       "experience_tier": "moderate"
     },
@@ -4651,14 +4653,14 @@
       "experience_tier": "limited"
     },
     "USA": {
-      "matches": 3,
-      "wins": 2,
+      "matches": 4,
+      "wins": 3,
       "draws": 0,
       "losses": 1,
-      "goals_for": 8,
+      "goals_for": 10,
       "goals_against": 4,
-      "win_rate": 0.6667,
-      "goal_ratio": 2.0,
+      "win_rate": 0.75,
+      "goal_ratio": 2.5,
       "titles": 0,
       "experience_tier": "limited"
     },
@@ -4687,26 +4689,26 @@
       "experience_tier": "limited"
     },
     "DR Congo": {
-      "matches": 3,
+      "matches": 4,
       "wins": 1,
       "draws": 1,
-      "losses": 1,
-      "goals_for": 4,
-      "goals_against": 3,
-      "win_rate": 0.3333,
-      "goal_ratio": 1.333,
+      "losses": 2,
+      "goals_for": 5,
+      "goals_against": 5,
+      "win_rate": 0.25,
+      "goal_ratio": 1.0,
       "titles": 0,
       "experience_tier": "limited"
     },
     "Bosnia Herzegovina": {
-      "matches": 3,
+      "matches": 4,
       "wins": 1,
       "draws": 1,
-      "losses": 1,
+      "losses": 2,
       "goals_for": 5,
-      "goals_against": 6,
-      "win_rate": 0.3333,
-      "goal_ratio": 0.833,
+      "goals_against": 8,
+      "win_rate": 0.25,
+      "goal_ratio": 0.625,
       "titles": 0,
       "experience_tier": "limited"
     },
@@ -4723,14 +4725,14 @@
       "experience_tier": "limited"
     },
     "Cape Verde": {
-      "matches": 3,
+      "matches": 4,
       "wins": 0,
       "draws": 3,
-      "losses": 0,
-      "goals_for": 2,
-      "goals_against": 2,
+      "losses": 1,
+      "goals_for": 4,
+      "goals_against": 5,
       "win_rate": 0.0,
-      "goal_ratio": 1.0,
+      "goal_ratio": 0.8,
       "titles": 0,
       "experience_tier": "limited"
     },
@@ -4749,9 +4751,9 @@
   },
   "meta": {
     "n_matches": 32287,
-    "last_rebuilt": "2026-06-29 16:09:24.146846",
-    "last_updated": "2026-06-29 16:15:45.694875",
-    "n_manual": 74
+    "last_rebuilt": "2026-07-04 11:54:14.560693",
+    "last_updated": "2026-07-04 11:54:14.581426",
+    "n_manual": 88
   },
-  "state_hash": "3e4ea951db90"
+  "state_hash": "24743cbfca82"
 }
