@@ -597,7 +597,9 @@
     "locked": true,
     "recorded_at": "2026-07-01T08:32:09.592560",
     "home": "Germany",
-    "away": "Paraguay"
+    "away": "Paraguay",
+    "pen_home": 3,
+    "pen_away": 4
   },
   "M75": {
     "home_score": 1,
@@ -605,7 +607,9 @@
     "locked": true,
     "recorded_at": "2026-07-01T08:32:09.598814",
     "home": "Netherlands",
-    "away": "Morocco"
+    "away": "Morocco",
+    "pen_home": 2,
+    "pen_away": 3
   },
   "M78": {
     "home_score": 1,
@@ -685,7 +689,9 @@
     "locked": true,
     "recorded_at": "2026-07-04T11:54:12.994220",
     "home": "Australia",
-    "away": "Egypt"
+    "away": "Egypt",
+    "pen_home": 2,
+    "pen_away": 4
   },
   "M86": {
     "home_score": 3,
@@ -702,5 +708,13 @@
     "recorded_at": "2026-07-04T11:54:13.011641",
     "home": "Colombia",
     "away": "Ghana"
+  },
+  "M90": {
+    "home_score": 0,
+    "away_score": 3,
+    "locked": true,
+    "recorded_at": "2026-07-04T14:00:00.000000",
+    "home": "Canada",
+    "away": "Morocco"
   }
 }
