@@ -321,7 +321,7 @@ def _render_match(m: dict, off: dict, sim: dict, elos: dict):
                      f"Grupo {m.get('group', '')}")
     meta_html = (
         f'<div style="margin-top:.28rem;display:flex;flex-wrap:wrap;align-items:center;gap:.35rem">'
-        f'<span style="font-size:.88rem;font-weight:700;color:#8eaacc">'
+        f'<span style="font-size:.82rem;font-weight:600;color:#7eaacc">'
         f'📅 {m["date"]} &nbsp;⏰ {m["time_brt"]} BRT</span>'
         f'<span style="font-size:.72rem;color:#3a5a78"> · 🏟️ {m["stadium"]}, {m["city"]} · '
         f'{cm.tv_html(home, away, m["phase"])} · '
@@ -333,40 +333,33 @@ def _render_match(m: dict, off: dict, sim: dict, elos: dict):
 
     if is_official:
         hs, as_ = off_result['home_score'], off_result['away_score']
-        c_h, c_hs, c_x, c_as, c_a, c_st = st.columns([3, 1, 0.4, 1, 3, 2])
-        with c_h:
-            st.markdown(
-                f'<div style="text-align:right;font-weight:700;padding-top:.4rem">{home}</div>',
-                unsafe_allow_html=True)
-        with c_hs:
-            st.markdown(
-                f'<div style="text-align:center;font-size:1.3rem;font-weight:900;'
-                f'color:#c9a902;padding-top:.2rem">{hs}</div>', unsafe_allow_html=True)
-        with c_x:
-            st.markdown(
-                '<div style="text-align:center;padding-top:.45rem;color:#3a5a78">×</div>',
-                unsafe_allow_html=True)
-        with c_as:
-            st.markdown(
-                f'<div style="text-align:center;font-size:1.3rem;font-weight:900;'
-                f'color:#c9a902;padding-top:.2rem">{as_}</div>', unsafe_allow_html=True)
-        with c_a:
-            st.markdown(
-                f'<div style="font-weight:700;padding-top:.4rem">{away}</div>',
-                unsafe_allow_html=True)
-        with c_st:
-            st.markdown(
-                '<div style="text-align:center;padding-top:.5rem;font-size:.8rem;'
-                'color:#00aa55">🔒 Oficial</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div style="display:flex;align-items:center;gap:.45rem;padding:.25rem 0">'
+            f'<span style="flex:1;font-weight:700;text-align:right;min-width:0;'
+            f'overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{home}</span>'
+            f'<span style="font-size:1.15rem;font-weight:900;color:#c9a902;background:#060f1c;'
+            f'padding:3px 12px;border-radius:6px;flex-shrink:0;white-space:nowrap">'
+            f'{hs}&nbsp;×&nbsp;{as_}</span>'
+            f'<span style="flex:1;font-weight:700;min-width:0;overflow:hidden;'
+            f'text-overflow:ellipsis;white-space:nowrap">{away}</span>'
+            f'<span style="color:#00aa55;font-size:.75rem;flex-shrink:0">🔒</span>'
+            f'</div>',
+            unsafe_allow_html=True
+        )
         st.markdown(meta_html, unsafe_allow_html=True)
     else:
-        status_icon = '🎲' if sim_result else '·'
-        c_h, c_hs, c_x, c_as, c_a, c_sim, c_grv = st.columns([3, 1.1, 0.4, 1.1, 3, 1.6, 1.6])
-        with c_h:
-            st.markdown(
-                f'<div style="text-align:right;font-weight:700;padding-top:.5rem">'
-                f'{home} <span style="color:#3a5a78;font-size:.8rem">{status_icon}</span></div>',
-                unsafe_allow_html=True)
+        status_icon = '🎲' if sim_result else ''
+        st.markdown(
+            f'<div style="display:flex;justify-content:space-between;font-weight:700;'
+            f'font-size:.92rem;margin-bottom:.1rem;gap:.4rem">'
+            f'<span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'
+            f'{home} <span style="color:#3a5a78;font-size:.75rem">{status_icon}</span></span>'
+            f'<span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;'
+            f'text-align:right">{away}</span>'
+            f'</div>',
+            unsafe_allow_html=True
+        )
+        c_hs, c_x, c_as, c_sim, c_grv = st.columns([2, 0.35, 2, 2.3, 2.3])
         with c_hs:
             st.number_input('', 0, 20, key=f'hs_{mid}', label_visibility='collapsed')
         with c_x:
@@ -375,22 +368,17 @@ def _render_match(m: dict, off: dict, sim: dict, elos: dict):
                 unsafe_allow_html=True)
         with c_as:
             st.number_input('', 0, 20, key=f'as_{mid}', label_visibility='collapsed')
-        with c_a:
-            st.markdown(
-                f'<div style="font-weight:700;padding-top:.5rem">{away}</div>',
-                unsafe_allow_html=True)
         with c_sim:
             if st.button('⚡ Sim', key=f'sim_{mid}', use_container_width=True,
-                         help='Simular resultado aleatório'):
+                         help='Simular resultado'):
                 ga, gb = cm.simulate_match_score(home, away, elos)
                 sim[mid] = {'home_score': ga, 'away_score': gb}
-                # Remove widget keys so init block re-reads from sim_result on rerun
                 st.session_state.pop(f'hs_{mid}', None)
                 st.session_state.pop(f'as_{mid}', None)
                 st.rerun()
         with c_grv:
             if st.button('📝 Gravar', key=f'grv_{mid}', use_container_width=True,
-                         help='Gravar placar oficial (irreversível)'):
+                         help='Gravar placar oficial'):
                 st.session_state[f'confirm_{mid}'] = {
                     'hs': int(st.session_state.get(f'hs_{mid}', 0)),
                     'as': int(st.session_state.get(f'as_{mid}', 0)),
@@ -596,7 +584,7 @@ def _render_ko_match(m: dict, ko_off: dict, ko_sim: dict,
     gcal = _gcal_url(home_lbl, away_lbl, m['date'], m['time_brt'], m['stadium'], m['city'])
     meta_html = (
         f'<div style="margin-top:.28rem;display:flex;flex-wrap:wrap;align-items:center;gap:.35rem">'
-        f'<span style="font-size:.88rem;font-weight:700;color:#8eaacc">'
+        f'<span style="font-size:.82rem;font-weight:600;color:#7eaacc">'
         f'📅 {m["date"]} &nbsp;⏰ {m["time_brt"]} BRT</span>'
         f'<span style="font-size:.72rem;color:#3a5a78"> · 🏟️ {m["stadium"]}, {m["city"]}'
         f'{(" · " + cm.tv_html(home, away, m["phase"])) if teams_known else ""}'
@@ -610,52 +598,30 @@ def _render_ko_match(m: dict, ko_off: dict, ko_sim: dict,
         hs, as_ = off_result['home_score'], off_result['away_score']
         pen_h = off_result.get('pen_home')
         pen_a = off_result.get('pen_away')
-        c_h, c_hs, c_x, c_as, c_a, c_st = st.columns([3, 1, 0.4, 1, 3, 2])
-        with c_h:
-            st.markdown(
-                f'<div style="text-align:right;font-weight:700;padding-top:.4rem">'
-                f'{home_lbl}</div>', unsafe_allow_html=True)
-        with c_hs:
-            st.markdown(
-                f'<div style="text-align:center;font-size:1.3rem;font-weight:900;'
-                f'color:#c9a902;padding-top:.2rem">{hs}</div>', unsafe_allow_html=True)
-        with c_x:
-            st.markdown(
-                '<div style="text-align:center;padding-top:.45rem;color:#3a5a78">×</div>',
-                unsafe_allow_html=True)
-        with c_as:
-            st.markdown(
-                f'<div style="text-align:center;font-size:1.3rem;font-weight:900;'
-                f'color:#c9a902;padding-top:.2rem">{as_}</div>', unsafe_allow_html=True)
-        with c_a:
-            st.markdown(
-                f'<div style="font-weight:700;padding-top:.4rem">{away_lbl}</div>',
-                unsafe_allow_html=True)
-        with c_st:
-            if pen_h is not None and pen_a is not None:
-                st.markdown(
-                    f'<div style="text-align:center;padding-top:.3rem;font-size:.8rem;'
-                    f'color:#00aa55">🔒 Oficial<br>'
-                    f'<span style="font-size:.72rem;color:#c9a902">Pên: {pen_h}–{pen_a}</span></div>',
-                    unsafe_allow_html=True)
-            else:
-                st.markdown(
-                    '<div style="text-align:center;padding-top:.5rem;font-size:.8rem;'
-                    'color:#00aa55">🔒 Oficial</div>', unsafe_allow_html=True)
-        # Empate sem pênaltis: exibe barra de registro
+        _pen_sfx = (f' <span style="font-size:.7rem;color:#c9a902">(pên {pen_h}–{pen_a})</span>'
+                    if pen_h is not None and pen_a is not None else '')
+        st.markdown(
+            f'<div style="display:flex;align-items:center;gap:.45rem;padding:.25rem 0">'
+            f'<span style="flex:1;font-weight:700;text-align:right;min-width:0;'
+            f'overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{home_lbl}</span>'
+            f'<span style="font-size:1.1rem;font-weight:900;color:#c9a902;background:#060f1c;'
+            f'padding:3px 10px;border-radius:6px;flex-shrink:0;white-space:nowrap">'
+            f'{hs}&nbsp;×&nbsp;{as_}{_pen_sfx}</span>'
+            f'<span style="flex:1;font-weight:700;min-width:0;overflow:hidden;'
+            f'text-overflow:ellipsis;white-space:nowrap">{away_lbl}</span>'
+            f'<span style="color:#00aa55;font-size:.75rem;flex-shrink:0">🔒</span>'
+            f'</div>',
+            unsafe_allow_html=True
+        )
+        # Empate sem pênaltis: registro compacto inline
         if hs == as_ and (pen_h is None or pen_a is None):
-            st.markdown(
-                '<div style="background:#071a2e;border-left:3px solid #c9a902;'
-                'padding:.3rem .75rem;border-radius:0 6px 6px 0;font-size:.8rem;'
-                'color:#8eaacc;margin:.2rem 0">⚽ Empate — registre o placar de pênaltis:</div>',
-                unsafe_allow_html=True)
             _pp1, _pp2, _pp3 = st.columns([2, 2, 2])
             with _pp1:
                 st.number_input(f'Pên. {home_lbl}', 0, 30, step=1, key=f'pen_add_h_{mid}')
             with _pp2:
                 st.number_input(f'Pên. {away_lbl}', 0, 30, step=1, key=f'pen_add_a_{mid}')
             with _pp3:
-                if st.button('💾 Salvar Pênaltis', key=f'savepen_{mid}',
+                if st.button('💾 Pênaltis', key=f'savepen_{mid}',
                              type='primary', use_container_width=True):
                     _ph = int(st.session_state.get(f'pen_add_h_{mid}', 0))
                     _pa = int(st.session_state.get(f'pen_add_a_{mid}', 0))
@@ -664,66 +630,53 @@ def _render_ko_match(m: dict, ko_off: dict, ko_sim: dict,
                     _run_sim.clear()
                     st.session_state['state_dirty'] = True
                     st.rerun()
-        # Empate com pênaltis: exibe resultado completo
-        elif hs == as_ and pen_h is not None and pen_a is not None:
-            pen_winner = home_lbl if pen_h > pen_a else away_lbl
-            st.markdown(
-                f'<div style="background:#071a2e;border-left:3px solid #c9a902;'
-                f'padding:.3rem .75rem;border-radius:0 6px 6px 0;font-size:.82rem;margin:.2rem 0">'
-                f'<span style="color:#c9a902;font-weight:700">⚽ Pênaltis:</span> '
-                f'<span style="color:#fff;font-weight:700">{home_lbl} {pen_h} × {pen_a} {away_lbl}</span>'
-                f'<span style="color:#00aa55;font-size:.75rem;margin-left:.6rem">'
-                f'→ {pen_winner} avança</span></div>',
-                unsafe_allow_html=True)
     else:
-        c_h, c_hs, c_x, c_as, c_a, c_sim, c_grv = st.columns([3, 1.1, 0.4, 1.1, 3, 1.6, 1.6])
-        with c_h:
-            status_ico = '🎲' if sim_result else '·'
-            style_h = ('text-align:right;font-weight:700;padding-top:.5rem'
-                       if teams_known else
-                       'text-align:right;font-style:italic;color:#3a5a78;padding-top:.5rem')
+        if teams_known:
+            status_ico = '🎲' if sim_result else ''
             st.markdown(
-                f'<div style="{style_h}">{home_lbl} '
-                f'<span style="color:#3a5a78;font-size:.8rem">{status_ico}</span></div>',
-                unsafe_allow_html=True)
-        with c_hs:
-            if teams_known:
+                f'<div style="display:flex;justify-content:space-between;font-weight:700;'
+                f'font-size:.92rem;margin-bottom:.1rem;gap:.4rem">'
+                f'<span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'
+                f'{home_lbl} <span style="color:#3a5a78;font-size:.75rem">{status_ico}</span></span>'
+                f'<span style="min-width:0;overflow:hidden;text-overflow:ellipsis;'
+                f'white-space:nowrap;text-align:right">{away_lbl}</span>'
+                f'</div>',
+                unsafe_allow_html=True
+            )
+            c_hs, c_x, c_as, c_sim, c_grv = st.columns([2, 0.35, 2, 2.3, 2.3])
+            with c_hs:
                 st.number_input('', 0, 20, key=f'hs_{mid}', label_visibility='collapsed')
-            else:
+            with c_x:
                 st.markdown(
-                    '<div style="padding-top:.5rem;color:#1a3050;text-align:center">—</div>',
+                    '<div style="text-align:center;padding-top:.5rem;color:#3a5a78">×</div>',
                     unsafe_allow_html=True)
-        with c_x:
-            st.markdown(
-                '<div style="text-align:center;padding-top:.5rem;color:#3a5a78">×</div>',
-                unsafe_allow_html=True)
-        with c_as:
-            if teams_known:
+            with c_as:
                 st.number_input('', 0, 20, key=f'as_{mid}', label_visibility='collapsed')
-            else:
-                st.markdown(
-                    '<div style="padding-top:.5rem;color:#1a3050;text-align:center">—</div>',
-                    unsafe_allow_html=True)
-        with c_a:
-            style_a = ('font-weight:700;padding-top:.5rem'
-                       if teams_known else
-                       'font-style:italic;color:#3a5a78;padding-top:.5rem')
-            st.markdown(f'<div style="{style_a}">{away_lbl}</div>', unsafe_allow_html=True)
-        with c_sim:
-            if teams_known:
+            with c_sim:
                 if st.button('⚡ Sim', key=f'sim_{mid}', use_container_width=True):
                     ga, gb = cm.simulate_match_score(home, away, elos)
                     ko_sim[mid] = {'home_score': ga, 'away_score': gb}
                     st.session_state.pop(f'hs_{mid}', None)
                     st.session_state.pop(f'as_{mid}', None)
                     st.rerun()
-        with c_grv:
-            if teams_known:
+            with c_grv:
                 if st.button('📝 Gravar', key=f'grv_{mid}', use_container_width=True):
                     st.session_state[f'confirm_{mid}'] = {
                         'hs': int(st.session_state.get(f'hs_{mid}', 0)),
                         'as': int(st.session_state.get(f'as_{mid}', 0)),
                     }
+        else:
+            st.markdown(
+                f'<div style="display:flex;justify-content:space-between;font-style:italic;'
+                f'color:#3a5a78;font-size:.85rem;padding:.3rem 0;gap:.4rem">'
+                f'<span style="min-width:0;overflow:hidden;text-overflow:ellipsis;'
+                f'white-space:nowrap">{home_lbl}</span>'
+                f'<span style="flex-shrink:0">×</span>'
+                f'<span style="min-width:0;overflow:hidden;text-overflow:ellipsis;'
+                f'white-space:nowrap;text-align:right">{away_lbl}</span>'
+                f'</div>',
+                unsafe_allow_html=True
+            )
 
     st.markdown(meta_html, unsafe_allow_html=True)
 
