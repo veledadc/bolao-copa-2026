@@ -168,7 +168,8 @@ def load_official() -> dict:
 
 
 def save_official_result(match_id: str, home_score: int, away_score: int,
-                         home: str | None = None, away: str | None = None) -> None:
+                         home: str | None = None, away: str | None = None,
+                         pen_home: int | None = None, pen_away: int | None = None) -> None:
     official = load_official()
     if match_id in official and official[match_id].get('locked'):
         raise ValueError(f'{match_id} already locked')
@@ -182,6 +183,9 @@ def save_official_result(match_id: str, home_score: int, away_score: int,
         entry['home'] = home
     if away:
         entry['away'] = away
+    if pen_home is not None and pen_away is not None:
+        entry['pen_home'] = int(pen_home)
+        entry['pen_away'] = int(pen_away)
     official[match_id] = entry
     os.makedirs('data', exist_ok=True)
     with open(OFFICIAL_FILE, 'w', encoding='utf-8') as f:
@@ -371,9 +375,20 @@ def resolve_knockout_teams(
                 if hs > as_:
                     winners[f'W_{mid}'] = m['home']
                     losers [f'L_{mid}'] = m['away']
-                else:
+                elif as_ > hs:
                     winners[f'W_{mid}'] = m['away']
                     losers [f'L_{mid}'] = m['home']
+                else:
+                    # empate — usa pênaltis se registrado
+                    ph = int(res.get('pen_home') or 0)
+                    pa = int(res.get('pen_away') or 0)
+                    if ph > pa:
+                        winners[f'W_{mid}'] = m['home']
+                        losers [f'L_{mid}'] = m['away']
+                    elif pa > ph:
+                        winners[f'W_{mid}'] = m['away']
+                        losers [f'L_{mid}'] = m['home']
+                    # se pen igual ou não informado, slot permanece vazio
 
         new_resolved = []
         for m in resolved:

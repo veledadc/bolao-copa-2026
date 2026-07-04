@@ -320,13 +320,15 @@ def _render_match(m: dict, off: dict, sim: dict, elos: dict):
     gcal = _gcal_url(home, away, m['date'], m['time_brt'], m['stadium'], m['city'],
                      f"Grupo {m.get('group', '')}")
     meta_html = (
-        f'<span style="font-size:.72rem;color:#3a5a78">'
-        f'📅 {m["date"]} · ⏰ {m["time_brt"]} BRT · '
-        f'🏟️ {m["stadium"]}, {m["city"]} · '
+        f'<div style="margin-top:.28rem;display:flex;flex-wrap:wrap;align-items:center;gap:.35rem">'
+        f'<span style="font-size:.88rem;font-weight:700;color:#8eaacc">'
+        f'📅 {m["date"]} &nbsp;⏰ {m["time_brt"]} BRT</span>'
+        f'<span style="font-size:.72rem;color:#3a5a78"> · 🏟️ {m["stadium"]}, {m["city"]} · '
         f'{cm.tv_html(home, away, m["phase"])} · '
         f'<a href="{gcal}" target="_blank" style="color:#4472c4;text-decoration:none" '
-        f'title="Adicionar ao Calendário">📆 cal</a>'
+        f'title="Adicionar ao Google Calendário">📆 cal</a>'
         f'</span>'
+        f'</div>'
     )
 
     if is_official:
@@ -436,7 +438,7 @@ _g1, _g2, _g3 = st.columns([2, 2.2, 4])
 with _g1:
     if st.button('⚡ Simular Tudo', type='primary', use_container_width=True,
                  help='Simula todos os jogos pendentes: grupos + todas as fases eliminatórias'):
-        _new_sim = cm.simulate_all_pending(schedule, official, {}, state['elos'])
+        _new_sim = cm.simulate_all_pending(schedule, official, {}, adj_elos)
         _clear_inputs([m['id'] for m in schedule])
         _std_tmp = cm.compute_group_standings(schedule, official, _new_sim)
         _sl_tmp  = cm.resolve_bracket_slots(_std_tmp)
@@ -444,7 +446,7 @@ with _g1:
         _new_ko: dict = {}
         for _ in range(6):
             _rt   = cm.resolve_knockout_teams(ko_sched, _sl_tmp, _ko_off, _new_ko)
-            _new_ko = cm.simulate_all_knockout_pending(_rt, _ko_off, _new_ko, state['elos'])
+            _new_ko = cm.simulate_all_knockout_pending(_rt, _ko_off, _new_ko, adj_elos)
         _clear_inputs([m['id'] for m in ko_sched])
         st.session_state['copa_sim']    = _new_sim
         st.session_state['copa_ko_sim'] = _new_ko
@@ -524,7 +526,7 @@ with st.expander('📅 Fase de Grupos', expanded=not group_complete):
                     for md in [1, 2, 3]:
                         st.caption(f'Rodada {md}' + (' — simultâneos' if md == 3 else ''))
                         for m in (x for x in grp_matches if x['matchday'] == md):
-                            _render_match(m, official_now, sim_now, state['elos'])
+                            _render_match(m, official_now, sim_now, adj_elos)
 
         if row_i + 2 < len(groups_list):
             st.markdown('---')
@@ -577,17 +579,21 @@ def _render_ko_match(m: dict, ko_off: dict, ko_sim: dict,
 
     gcal = _gcal_url(home_lbl, away_lbl, m['date'], m['time_brt'], m['stadium'], m['city'])
     meta_html = (
-        f'<span style="font-size:.72rem;color:#3a5a78">'
-        f'📅 {m["date"]} · ⏰ {m["time_brt"]} BRT · '
-        f'🏟️ {m["stadium"]}, {m["city"]}'
-        f'{" · " + cm.tv_html(home, away, m["phase"]) if teams_known else ""}'
+        f'<div style="margin-top:.28rem;display:flex;flex-wrap:wrap;align-items:center;gap:.35rem">'
+        f'<span style="font-size:.88rem;font-weight:700;color:#8eaacc">'
+        f'📅 {m["date"]} &nbsp;⏰ {m["time_brt"]} BRT</span>'
+        f'<span style="font-size:.72rem;color:#3a5a78"> · 🏟️ {m["stadium"]}, {m["city"]}'
+        f'{(" · " + cm.tv_html(home, away, m["phase"])) if teams_known else ""}'
         f' · <a href="{gcal}" target="_blank" style="color:#4472c4;text-decoration:none" '
-        f'title="Adicionar ao Calendário">📆 cal</a>'
+        f'title="Adicionar ao Google Calendário">📆 cal</a>'
         f'</span>'
+        f'</div>'
     )
 
     if is_official:
         hs, as_ = off_result['home_score'], off_result['away_score']
+        pen_h = off_result.get('pen_home')
+        pen_a = off_result.get('pen_away')
         c_h, c_hs, c_x, c_as, c_a, c_st = st.columns([3, 1, 0.4, 1, 3, 2])
         with c_h:
             st.markdown(
@@ -610,9 +616,16 @@ def _render_ko_match(m: dict, ko_off: dict, ko_sim: dict,
                 f'<div style="font-weight:700;padding-top:.4rem">{away_lbl}</div>',
                 unsafe_allow_html=True)
         with c_st:
-            st.markdown(
-                '<div style="text-align:center;padding-top:.5rem;font-size:.8rem;'
-                'color:#00aa55">🔒 Oficial</div>', unsafe_allow_html=True)
+            if pen_h is not None and pen_a is not None:
+                st.markdown(
+                    f'<div style="text-align:center;padding-top:.3rem;font-size:.8rem;'
+                    f'color:#00aa55">🔒 Oficial<br>'
+                    f'<span style="font-size:.72rem;color:#c9a902">Pên: {pen_h}–{pen_a}</span></div>',
+                    unsafe_allow_html=True)
+            else:
+                st.markdown(
+                    '<div style="text-align:center;padding-top:.5rem;font-size:.8rem;'
+                    'color:#00aa55">🔒 Oficial</div>', unsafe_allow_html=True)
     else:
         c_h, c_hs, c_x, c_as, c_a, c_sim, c_grv = st.columns([3, 1.1, 0.4, 1.1, 3, 1.6, 1.6])
         with c_h:
@@ -672,11 +685,24 @@ def _render_ko_match(m: dict, ko_off: dict, ko_sim: dict,
             f'⚠️ **Gravar: {home_lbl} {hs_c} × {as_c} {away_lbl}** — ação irreversível.',
             icon='🔒',
         )
+        is_draw = (hs_c == as_c)
+        if is_draw:
+            st.info('⚽ **Empate** — informe o placar de pênaltis para determinar o classificado.')
+            _pc1, _pc2 = st.columns(2)
+            with _pc1:
+                st.number_input(f'Pên. {home_lbl}', min_value=0, max_value=30,
+                                step=1, key=f'pnh_{mid}')
+            with _pc2:
+                st.number_input(f'Pên. {away_lbl}', min_value=0, max_value=30,
+                                step=1, key=f'pna_{mid}')
         cc1, cc2 = st.columns(2)
         with cc1:
             if st.button('✅ Confirmar', key=f'yes_{mid}', type='secondary',
                          use_container_width=True):
-                cm.save_official_result(mid, hs_c, as_c, home, away)
+                pen_h = int(st.session_state.get(f'pnh_{mid}', 0)) if is_draw else None
+                pen_a = int(st.session_state.get(f'pna_{mid}', 0)) if is_draw else None
+                cm.save_official_result(mid, hs_c, as_c, home, away,
+                                        pen_home=pen_h, pen_away=pen_a)
                 cur   = sm.load_state() or state
                 new_s = sm.apply_result(cur, home, away, hs_c, as_c,
                                         'FIFA World Cup', neutral=True)
@@ -688,6 +714,8 @@ def _render_ko_match(m: dict, ko_off: dict, ko_sim: dict,
                 st.session_state.pop(f'confirm_{mid}', None)
                 st.session_state.pop(f'hs_{mid}', None)
                 st.session_state.pop(f'as_{mid}', None)
+                st.session_state.pop(f'pnh_{mid}', None)
+                st.session_state.pop(f'pna_{mid}', None)
                 st.rerun()
         with cc2:
             if st.button('Cancelar', key=f'no_{mid}', use_container_width=True):
@@ -749,11 +777,12 @@ for phase_key, phase_label, phase_dates, expected in _PHASES:
             if st.button(f'⚡ Simular Fase', key=f'simphase_{phase_key}',
                          type='primary', use_container_width=True):
                 new_ko = dict(ko_sim_now)
-                for _ in range(6):
-                    res_tmp = cm.resolve_knockout_teams(ko_sched, bracket_slots,
-                                                        ko_official, new_ko)
-                    new_ko  = cm.simulate_all_knockout_pending(
-                        res_tmp, ko_official, new_ko, state['elos'])
+                for _m in phase_matches:
+                    _mid = _m['id']
+                    if (_mid not in ko_official and _mid not in new_ko
+                            and _m.get('home') and _m.get('away')):
+                        _ga, _gb = cm.simulate_match_score(_m['home'], _m['away'], adj_elos)
+                        new_ko[_mid] = {'home_score': _ga, 'away_score': _gb}
                 st.session_state['copa_ko_sim'] = new_ko
                 st.rerun()
         with kc2:
@@ -779,4 +808,4 @@ for phase_key, phase_label, phase_dates, expected in _PHASES:
         st.markdown('<br>', unsafe_allow_html=True)
 
         for m in phase_matches:
-            _render_ko_match(m, ko_official, ko_sim_now, bracket_slots, ko_sched, state['elos'])
+            _render_ko_match(m, ko_official, ko_sim_now, bracket_slots, ko_sched, adj_elos)
