@@ -230,14 +230,76 @@ hr{border-color:#0d2040!important;margin:1.5rem 0!important;}
   /* tv chips */
   .tv-chip{font-size:.6rem!important;padding:1px 5px!important;}
 
-  /* buttons — smaller on mobile */
-  .stButton>button{font-size:.78rem!important;padding:.3rem .6rem!important;}
+  /* buttons — smaller on mobile, min 44px height for touch */
+  .stButton>button{
+    font-size:.78rem!important;
+    padding:.3rem .5rem!important;
+    min-height:44px!important;
+    touch-action:manipulation!important;
+    -webkit-tap-highlight-color:transparent!important;
+  }
 
   /* expander header */
   .streamlit-expanderHeader{font-size:.83rem!important;padding:.45rem .7rem!important;}
 
   /* dataframe — let it scroll horizontally */
   [data-testid="stDataFrame"]{overflow-x:auto!important;}
+
+  /* columns — allow shrinking below content min-width */
+  [data-testid="stColumn"]{min-width:0!important;}
+
+  /* number inputs — remove steppers (+/-) to save space; center text */
+  [data-testid="stNumberInput"] button{display:none!important;}
+  [data-testid="stNumberInput"],
+  [data-testid="stNumberInput"]>div,
+  [data-testid="stNumberInput"]>div>div{min-width:0!important;}
+  [data-testid="stNumberInput"] input{
+    min-width:0!important;
+    width:100%!important;
+    padding:.2rem .1rem!important;
+    font-size:.82rem!important;
+    text-align:center!important;
+  }
+
+  /* match row markdown text — prevent overflow, truncate */
+  [data-testid="stHorizontalBlock"] [data-testid="stMarkdownContainer"] p,
+  [data-testid="stHorizontalBlock"] [data-testid="stMarkdownContainer"] div{
+    font-size:.75rem!important;
+    line-height:1.3!important;
+  }
+
+  /* 4+ column rows (match rows, scenario cards) → horizontal scroll */
+  [data-testid="stHorizontalBlock"]:has(>[data-testid="stColumn"]:nth-child(4)){
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    padding-bottom:.3rem!important;
+    gap:.3rem!important;
+  }
+  [data-testid="stHorizontalBlock"]:has(>[data-testid="stColumn"]:nth-child(4))
+  >[data-testid="stColumn"]{
+    flex-shrink:0!important;
+    min-width:70px!important;
+  }
+  /* wider min-width for scenario cards (5 columns with rich content) */
+  [data-testid="stHorizontalBlock"]:has(>[data-testid="stColumn"]:nth-child(5))
+  >[data-testid="stColumn"]{
+    min-width:220px!important;
+  }
+}
+
+/* ── page header — stack vertically on small screens ── */
+@media (max-width:640px){
+  #bolao-page-header{
+    flex-direction:column!important;
+    padding:.45rem .9rem .4rem!important;
+    gap:.2rem!important;
+  }
+  #bolao-page-header>div:last-child{
+    text-align:left!important;
+    white-space:normal!important;
+    flex-shrink:1!important;
+    font-size:.65rem!important;
+  }
 }
 
 /* very small screens (phones < 480px) */
@@ -245,6 +307,17 @@ hr{border-color:#0d2040!important;margin:1.5rem 0!important;}
   h1{font-size:1.1rem!important;}
   .main .block-container{padding:.4rem .5rem 1.5rem!important;}
   nav a{font-size:.65rem!important;padding:.24rem .4rem!important;}
+
+  /* even more compact number inputs */
+  [data-testid="stNumberInput"] input{
+    font-size:.75rem!important;
+    padding:.1rem!important;
+  }
+  /* match buttons — ultra compact */
+  .stButton>button{
+    font-size:.68rem!important;
+    padding:.25rem .3rem!important;
+  }
 }
 
 </style>"""

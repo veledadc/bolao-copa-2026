@@ -41,27 +41,36 @@ _TOGGLE_HTML = """<script>
     b.style.cssText =
       'position:fixed;top:8px;left:8px;z-index:2147483647;'
       + 'background:#0c1c2e;border:1px solid #c9a902;border-radius:6px;'
-      + 'cursor:pointer;width:36px;height:36px;'
+      + 'cursor:pointer;width:44px;height:44px;'
       + 'display:flex;align-items:center;justify-content:center;'
       + 'padding:0;transition:background .15s;outline:none;'
-      + 'box-shadow:0 2px 8px rgba(201,169,2,.25);';
+      + 'box-shadow:0 2px 8px rgba(201,169,2,.25);'
+      + 'touch-action:manipulation;-webkit-tap-highlight-color:transparent;';
     b.onmouseover = function () { this.style.background = '#13284a'; };
     b.onmouseout  = function () { this.style.background = '#0c1c2e'; };
     b.onclick     = function () { doToggle(); };
     doc.body.appendChild(b);
   }
 
-  /* listener em capture no window pai — dispara antes de qualquer handler React */
+  /* fecha sidebar ao clicar/tocar fora — capture phase antes do React */
+  function closeIfOutside(e) {
+    if (!sidebarIsOpen()) return;
+    var sidebar = getSidebar();
+    var btn     = doc.getElementById(BTN);
+    var target  = e.target || (e.touches && e.touches[0] && e.touches[0].target);
+    if (sidebar && sidebar.contains(target)) return;
+    if (btn     && btn.contains(target))     return;
+    doToggle();
+  }
+
   if (!win._bolaoClickSetup) {
     win._bolaoClickSetup = true;
-    win.addEventListener('click', function (e) {
-      if (!sidebarIsOpen()) return;
-      var sidebar = getSidebar();
-      var btn     = doc.getElementById(BTN);
-      if (sidebar && sidebar.contains(e.target)) return;
-      if (btn     && btn.contains(e.target))     return;
-      doToggle();
-    }, true);
+    win.addEventListener('click', closeIfOutside, true);
+  }
+  /* touchstart para dispositivos móveis (não dispara 'click' imediatamente) */
+  if (!win._bolaoTouchSetup) {
+    win._bolaoTouchSetup = true;
+    win.addEventListener('touchstart', closeIfOutside, true);
   }
 
   mkBtn();
@@ -75,7 +84,7 @@ _TOGGLE_HTML = """<script>
 def render_page_header() -> None:
     """Banner de identidade do app — aparece no topo de todas as páginas."""
     st.markdown(
-        '<div style="'
+        '<div id="bolao-page-header" style="'
         'background:linear-gradient(135deg,#001133 0%,#002255 70%,#001a40 100%);'
         'border:1px solid #1a3a6a;border-left:4px solid #c9a902;border-radius:10px;'
         'padding:.65rem 1.3rem .55rem;margin-bottom:.85rem;'
