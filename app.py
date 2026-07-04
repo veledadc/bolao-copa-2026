@@ -536,34 +536,50 @@ with st.expander('📅 Fase de Grupos', expanded=not group_complete):
 # KO BRACKET HELPERS
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def _slot_label(slot: str, br_slots: dict, ko_sched: list) -> str:
+def _slot_label(slot: str, br_slots: dict, ko_sched: list,
+                ko_res: list | None = None, _depth: int = 0) -> str:
+    """Resolve recursivamente um slot até o nome real das seleções."""
+    if _depth > 6:
+        return slot
+    # Slot direto de grupo (ex: '1A', '2B') — já resolvido
     if slot in br_slots and br_slots[slot]:
         return br_slots[slot]
     if slot.startswith('W_'):
         mid = slot[2:]
+        # Se ko_res tiver os times resolvidos para este jogo, usa-os
+        if ko_res:
+            rm = next((x for x in ko_res if x['id'] == mid), None)
+            if rm and rm.get('home') and rm.get('away'):
+                return f'Venc. ({rm["home"]} × {rm["away"]})'
+        # Recursão: resolve os slots-filhos do jogo
         m = next((x for x in ko_sched if x['id'] == mid), None)
         if m:
-            h = br_slots.get(m['slot_home'], m['slot_home'])
-            a = br_slots.get(m['slot_away'], m['slot_away'])
+            h = _slot_label(m['slot_home'], br_slots, ko_sched, ko_res, _depth + 1)
+            a = _slot_label(m['slot_away'], br_slots, ko_sched, ko_res, _depth + 1)
             return f'Venc. ({h} × {a})'
     if slot.startswith('L_'):
         mid = slot[2:]
+        if ko_res:
+            rm = next((x for x in ko_res if x['id'] == mid), None)
+            if rm and rm.get('home') and rm.get('away'):
+                return f'Perd. ({rm["home"]} × {rm["away"]})'
         m = next((x for x in ko_sched if x['id'] == mid), None)
         if m:
-            h = br_slots.get(m['slot_home'], m['slot_home'])
-            a = br_slots.get(m['slot_away'], m['slot_away'])
+            h = _slot_label(m['slot_home'], br_slots, ko_sched, ko_res, _depth + 1)
+            a = _slot_label(m['slot_away'], br_slots, ko_sched, ko_res, _depth + 1)
             return f'Perd. ({h} × {a})'
     return slot
 
 
 def _render_ko_match(m: dict, ko_off: dict, ko_sim: dict,
-                     br_slots: dict, ko_sched: list, elos: dict):
+                     br_slots: dict, ko_sched: list, elos: dict,
+                     ko_res: list | None = None):
     """Render one knockout match row."""
     mid       = m['id']
     home      = m.get('home')
     away      = m.get('away')
-    home_lbl  = home or _slot_label(m['slot_home'], br_slots, ko_sched)
-    away_lbl  = away or _slot_label(m['slot_away'], br_slots, ko_sched)
+    home_lbl  = home or _slot_label(m['slot_home'], br_slots, ko_sched, ko_res)
+    away_lbl  = away or _slot_label(m['slot_away'], br_slots, ko_sched, ko_res)
     off_result  = ko_off.get(mid)
     sim_result  = ko_sim.get(mid)
     is_official = bool(off_result)
@@ -841,4 +857,4 @@ for phase_key, phase_label, phase_dates, expected in _PHASES:
         st.markdown('<br>', unsafe_allow_html=True)
 
         for m in phase_matches:
-            _render_ko_match(m, ko_official, ko_sim_now, bracket_slots, ko_sched, adj_elos)
+            _render_ko_match(m, ko_official, ko_sim_now, bracket_slots, ko_sched, adj_elos, ko_resolved)
