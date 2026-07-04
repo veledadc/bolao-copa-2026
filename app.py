@@ -465,8 +465,9 @@ st.markdown('<br>', unsafe_allow_html=True)
 
 n_played   = sum(1 for m in schedule if official.get(m['id']) or copa_sim.get(m['id']))
 n_official = sum(1 for m in schedule if m['id'] in official)
+group_complete = n_played >= len(schedule)
 
-with st.expander('📅 Fase de Grupos', expanded=True):
+with st.expander('📅 Fase de Grupos', expanded=not group_complete):
     ctrl1, ctrl2, ctrl3 = st.columns([2, 2, 4])
     with ctrl1:
         if st.button('⚡ Simular Todos Pendentes', type='primary', use_container_width=True):
@@ -717,6 +718,18 @@ _PHASES = [
     ('final', '🏆 Final',             'Jul 19',        1),
 ]
 
+# Detecta automaticamente a fase ativa: primeira com times conhecidos e resultado pendente
+_active_ko_phase = None
+for _pk, _pl, _pd, _exp in _PHASES:
+    _pm = [m for m in ko_resolved if m['phase'] == _pk]
+    if not _pm:
+        continue
+    _has_known = any(m.get('home') and m.get('away') for m in _pm)
+    _n_done    = sum(1 for m in _pm if ko_official.get(m['id']) or ko_sim_now.get(m['id']))
+    if _has_known and _n_done < _exp:
+        _active_ko_phase = _pk
+        break
+
 for phase_key, phase_label, phase_dates, expected in _PHASES:
     phase_matches = [m for m in ko_resolved if m['phase'] == phase_key]
     if not phase_matches:
@@ -729,7 +742,7 @@ for phase_key, phase_label, phase_dates, expected in _PHASES:
 
     with st.expander(
         f'{phase_label} — {phase_dates}  ({n_ko_played}/{expected} com resultado)',
-        expanded=False,
+        expanded=(phase_key == _active_ko_phase),
     ):
         kc1, kc2, kc3 = st.columns([2, 2, 4])
         with kc1:
