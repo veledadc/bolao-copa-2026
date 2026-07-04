@@ -15,33 +15,20 @@ html, body { font-family:'Inter',system-ui,sans-serif!important; }
 [data-testid="stHeader"]{
   background:linear-gradient(90deg,#001133,#002255)!important;
   border-bottom:3px solid #c9a902!important;
+  z-index:100!important;
 }
 
 /* hide Streamlit's auto-generated page list */
 [data-testid="stSidebarNav"]{display:none!important;}
 
-/* sidebar reopen control — must ALWAYS stay visible & on top so the menu
-   can be reopened after it collapses (auto on mobile, or manually) */
-[data-testid="stSidebarCollapsedControl"]{
-  display:flex!important;
-  visibility:visible!important;
-  opacity:1!important;
+/* oculta controles nativos de toggle (substituídos pelo botão JS em sidebar.py) */
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"]{display:none!important;}
+
+/* garante que o botão hamburger JS fique sempre acima de tudo */
+#bolao-menu-toggle{
   position:fixed!important;
-  top:.55rem!important;
-  left:.6rem!important;
-  z-index:999999!important;
-  background:#0c1c2e!important;
-  border:1px solid #c9a902!important;
-  border-radius:6px!important;
-}
-[data-testid="stSidebarCollapsedControl"]:hover{
-  background:#13284a!important;
-}
-[data-testid="stSidebarCollapsedControl"] *{
-  color:#c9a902!important;
-  fill:#c9a902!important;
-  visibility:visible!important;
-  opacity:1!important;
+  z-index:2147483647!important;
 }
 
 /* sidebar */
