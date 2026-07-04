@@ -326,7 +326,7 @@ def _render_match(m: dict, off: dict, sim: dict, elos: dict):
         f'<span style="font-size:.72rem;color:#3a5a78"> · 🏟️ {m["stadium"]}, {m["city"]} · '
         f'{cm.tv_html(home, away, m["phase"])} · '
         f'<a href="{gcal}" target="_blank" style="color:#4472c4;text-decoration:none" '
-        f'title="Adicionar ao Google Calendário">📆 cal</a>'
+        f'title="Adicionar ao Google Calendário"><span style="font-size:1rem">📆</span> Agenda</a>'
         f'</span>'
         f'</div>'
     )
@@ -585,7 +585,7 @@ def _render_ko_match(m: dict, ko_off: dict, ko_sim: dict,
         f'<span style="font-size:.72rem;color:#3a5a78"> · 🏟️ {m["stadium"]}, {m["city"]}'
         f'{(" · " + cm.tv_html(home, away, m["phase"])) if teams_known else ""}'
         f' · <a href="{gcal}" target="_blank" style="color:#4472c4;text-decoration:none" '
-        f'title="Adicionar ao Google Calendário">📆 cal</a>'
+        f'title="Adicionar ao Google Calendário"><span style="font-size:1rem">📆</span> Agenda</a>'
         f'</span>'
         f'</div>'
     )

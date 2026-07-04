@@ -379,16 +379,15 @@ def resolve_knockout_teams(
                     winners[f'W_{mid}'] = m['away']
                     losers [f'L_{mid}'] = m['home']
                 else:
-                    # empate — usa pênaltis se registrado
+                    # empate — usa pênaltis se registrado; fallback: visitante avança
                     ph = int(res.get('pen_home') or 0)
                     pa = int(res.get('pen_away') or 0)
                     if ph > pa:
                         winners[f'W_{mid}'] = m['home']
                         losers [f'L_{mid}'] = m['away']
-                    elif pa > ph:
+                    else:
                         winners[f'W_{mid}'] = m['away']
                         losers [f'L_{mid}'] = m['home']
-                    # se pen igual ou não informado, slot permanece vazio
 
         new_resolved = []
         for m in resolved:
