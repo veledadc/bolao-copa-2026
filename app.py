@@ -48,21 +48,43 @@ def _get_state():
     return _load_state(sm.state_file_mtime())
 
 def _compute_adjusted_elos(base_state: dict, copa_sim: dict, copa_ko_sim: dict,
-                            schedule: list, ko_resolved: list) -> dict:
-    """Apply simulated match results as temporary Elo adjustments (read-only on base_state)."""
-    if not copa_sim and not copa_ko_sim:
+                            schedule: list, ko_resolved: list,
+                            official: dict | None = None) -> dict:
+    """
+    Elos ajustados incorporando, em ordem:
+      1. Resultados oficiais da Copa 2026 (copa_official.json)
+      2. Resultados simulados da sessão (session_state) — apenas partidas sem resultado oficial
+    """
+    official = official or {}
+    if not copa_sim and not copa_ko_sim and not official:
         return base_state['elos']
     s = copy.deepcopy(base_state)
+    # 1. Resultados oficiais — base para todas as simulações
     for m in schedule:
         mid = m['id']
-        if mid in copa_sim and m.get('home') and m.get('away'):
+        if mid in official and m.get('home') and m.get('away'):
+            res = official[mid]
+            sm.apply_result(s, m['home'], m['away'],
+                            int(res['home_score']), int(res['away_score']),
+                            'FIFA World Cup', neutral=True)
+    for m in ko_resolved:
+        mid = m['id']
+        if mid in official and m.get('home') and m.get('away'):
+            res = official[mid]
+            sm.apply_result(s, m['home'], m['away'],
+                            int(res['home_score']), int(res['away_score']),
+                            'FIFA World Cup', neutral=True)
+    # 2. Resultados simulados (só para partidas ainda sem resultado oficial)
+    for m in schedule:
+        mid = m['id']
+        if mid in copa_sim and mid not in official and m.get('home') and m.get('away'):
             res = copa_sim[mid]
             sm.apply_result(s, m['home'], m['away'],
                             int(res['home_score']), int(res['away_score']),
                             'FIFA World Cup', neutral=True)
     for m in ko_resolved:
         mid = m['id']
-        if mid in copa_ko_sim and m.get('home') and m.get('away'):
+        if mid in copa_ko_sim and mid not in official and m.get('home') and m.get('away'):
             res = copa_ko_sim[mid]
             sm.apply_result(s, m['home'], m['away'],
                             int(res['home_score']), int(res['away_score']),
@@ -200,12 +222,14 @@ with st.sidebar:
 # ═══════════════════════════════════════════════════════════════════════════════
 st.markdown('<div class="section-title">🏆 Favoritos ao Título</div>', unsafe_allow_html=True)
 
-# Compute adjusted Elos incorporating simulated match results
-adj_elos     = _compute_adjusted_elos(state, copa_sim, copa_ko_sim, schedule, ko_resolved)
+# Elos ajustados: oficial (resultados reais da Copa) + simulados (sessão)
+adj_elos     = _compute_adjusted_elos(state, copa_sim, copa_ko_sim, schedule, ko_resolved, official)
 _sim_content = json.dumps(sorted({**copa_sim, **copa_ko_sim}.items()), sort_keys=True)
+_off_content = json.dumps(sorted(official.items()), sort_keys=True)
 _sim_hash    = hashlib.md5(_sim_content.encode()).hexdigest()[:8]
-_cache_key   = f"{state['state_hash']}_{_sim_hash}"
-_adj_elos_j  = json.dumps(sorted(adj_elos.items())) if (copa_sim or copa_ko_sim) else ''
+_off_hash    = hashlib.md5(_off_content.encode()).hexdigest()[:6]
+_cache_key   = f"{state['state_hash']}_{_off_hash}_{_sim_hash}"
+_adj_elos_j  = json.dumps(sorted(adj_elos.items()))  # sempre usa Elos ajustados
 
 with st.spinner('Calculando probabilidades...'):
     probs = _run_sim(_cache_key, DEFAULT_N_SIMULATIONS, _adj_elos_j)

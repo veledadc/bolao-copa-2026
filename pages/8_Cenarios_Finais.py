@@ -187,20 +187,38 @@ def _score_html(team_a: str, ga: int, team_b: str, gb: int, pens: bool, winner: 
     )
 
 
-def _compute_adjusted_elos(base_state, copa_sim, copa_ko_sim, schedule, ko_resolved):
-    if not copa_sim and not copa_ko_sim:
+def _compute_adjusted_elos(base_state, copa_sim, copa_ko_sim, schedule, ko_resolved,
+                           official=None):
+    official = official or {}
+    if not copa_sim and not copa_ko_sim and not official:
         return base_state['elos']
     s = copy.deepcopy(base_state)
+    # 1. Resultados oficiais primeiro
     for m in schedule:
         mid = m['id']
-        if mid in copa_sim and m.get('home') and m.get('away'):
+        if mid in official and m.get('home') and m.get('away'):
+            res = official[mid]
+            sm.apply_result(s, m['home'], m['away'],
+                            int(res['home_score']), int(res['away_score']),
+                            'FIFA World Cup', neutral=True)
+    for m in ko_resolved:
+        mid = m['id']
+        if mid in official and m.get('home') and m.get('away'):
+            res = official[mid]
+            sm.apply_result(s, m['home'], m['away'],
+                            int(res['home_score']), int(res['away_score']),
+                            'FIFA World Cup', neutral=True)
+    # 2. Resultados simulados (só partidas sem resultado oficial)
+    for m in schedule:
+        mid = m['id']
+        if mid in copa_sim and mid not in official and m.get('home') and m.get('away'):
             res = copa_sim[mid]
             sm.apply_result(s, m['home'], m['away'],
                             int(res['home_score']), int(res['away_score']),
                             'FIFA World Cup', neutral=True)
     for m in ko_resolved:
         mid = m['id']
-        if mid in copa_ko_sim and m.get('home') and m.get('away'):
+        if mid in copa_ko_sim and mid not in official and m.get('home') and m.get('away'):
             res = copa_ko_sim[mid]
             sm.apply_result(s, m['home'], m['away'],
                             int(res['home_score']), int(res['away_score']),
@@ -220,12 +238,15 @@ br_slots    = cm.resolve_bracket_slots(standings)
 ko_official = {k: v for k, v in official.items() if not k.startswith('G_')}
 ko_resolved = cm.resolve_knockout_teams(ko_sched, br_slots, ko_official, copa_ko_sim)
 
-adj_elos    = _compute_adjusted_elos(state, copa_sim, copa_ko_sim, schedule, ko_resolved)
+adj_elos    = _compute_adjusted_elos(state, copa_sim, copa_ko_sim, schedule, ko_resolved, official)
 _sim_hash   = hashlib.md5(
     json.dumps(sorted({**copa_sim, **copa_ko_sim}.items()), sort_keys=True).encode()
 ).hexdigest()[:8]
-_cache_key  = f"sc_v2_{state['state_hash']}_{_sim_hash}"
-_adj_elos_j = json.dumps(sorted(adj_elos.items())) if (copa_sim or copa_ko_sim) else ''
+_off_hash   = hashlib.md5(
+    json.dumps(sorted(official.items()), sort_keys=True).encode()
+).hexdigest()[:6]
+_cache_key  = f"sc_v2_{state['state_hash']}_{_off_hash}_{_sim_hash}"
+_adj_elos_j = json.dumps(sorted(adj_elos.items()))  # sempre usa Elos ajustados
 
 N_SCENARIOS = 2000
 
