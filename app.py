@@ -11,7 +11,7 @@ from datetime import date as _date, timedelta
 from urllib.parse import quote
 
 from config import COPA_2026_GROUPS, DEFAULT_N_SIMULATIONS, N_BEST_THIRDS
-from src import state_manager as sm, monte_carlo as mc
+from src import state_manager as sm
 from src import copa_manager as cm
 from src.styles import get_css
 from src.sidebar import render_sidebar
@@ -31,12 +31,17 @@ def _load_state(_mtime: float):
     return sm.get_or_build_state()
 
 @st.cache_data(show_spinner=False)
-def _run_sim(cache_key: str, n_sims: int, adj_elos_json: str = ''):
-    """Run Monte Carlo. adj_elos_json overrides base Elo ratings when provided."""
-    state = sm.load_state() or sm.build_default_state()
-    elos  = dict(json.loads(adj_elos_json)) if adj_elos_json else state['elos']
-    return mc.run_simulations(
-        COPA_2026_GROUPS, elos, n_simulations=n_sims,
+def _run_sim(cache_key: str, n_sims: int, adj_elos_json: str = '', official_json: str = ''):
+    """Run Monte Carlo. adj_elos_json overrides base Elo ratings when provided.
+    Fixa os resultados oficiais da Copa 2026 (official_json) e simula apenas
+    o que ainda está pendente, respeitando o chaveamento real."""
+    state    = sm.load_state() or sm.build_default_state()
+    elos     = dict(json.loads(adj_elos_json)) if adj_elos_json else state['elos']
+    official = json.loads(official_json) if official_json else {}
+    schedule = cm.generate_schedule()
+    ko_sched = cm.generate_knockout_schedule()
+    return cm.run_realistic_simulations(
+        schedule, ko_sched, official, elos, n_simulations=n_sims,
         form=state.get('form', {}), copa_history=state.get('copa_history', {}),
     )
 
@@ -132,7 +137,15 @@ def _get_eliminated_teams(schedule: list, official: dict, copa_sim: dict,
         res = ko_official.get(mid) or ko_sim_now.get(mid)
         if res and m.get('home') and m.get('away') and m['phase'] != 'tp':
             hs, as_ = int(res['home_score']), int(res['away_score'])
-            eliminated.add(m['away'] if hs > as_ else m['home'])
+            if hs > as_:
+                eliminated.add(m['away'])
+            elif as_ > hs:
+                eliminated.add(m['home'])
+            else:
+                # empate — decide por pênaltis (fallback: visitante avança)
+                ph = int(res.get('pen_home') or 0)
+                pa = int(res.get('pen_away') or 0)
+                eliminated.add(m['home'] if pa > ph else m['away'])
 
     return eliminated
 
@@ -231,8 +244,9 @@ _off_hash    = hashlib.md5(_off_content.encode()).hexdigest()[:6]
 _cache_key   = f"{state['state_hash']}_{_off_hash}_{_sim_hash}"
 _adj_elos_j  = json.dumps(sorted(adj_elos.items()))  # sempre usa Elos ajustados
 
+_official_for_sim = {**official, **copa_sim, **copa_ko_sim}
 with st.spinner('Calculando probabilidades...'):
-    probs = _run_sim(_cache_key, DEFAULT_N_SIMULATIONS, _adj_elos_j)
+    probs = _run_sim(_cache_key, DEFAULT_N_SIMULATIONS, _adj_elos_j, json.dumps(_official_for_sim))
 
 # Apply eliminations: teams that lost or finished 4th get 0%; alive teams renormalized
 eliminated    = _get_eliminated_teams(schedule, official, copa_sim, standings,

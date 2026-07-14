@@ -1,13 +1,13 @@
 """Página 2 — Simulação Monte Carlo"""
-import sys, os
+import sys, os, json, hashlib, copy
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-from config import COPA_2026_GROUPS, DEFAULT_N_SIMULATIONS, N_BEST_THIRDS
-from src import state_manager as sm, monte_carlo as mc
+from config import DEFAULT_N_SIMULATIONS
+from src import state_manager as sm
 from src import copa_manager as cm
 from src.styles import get_css
 from src.sidebar import render_sidebar
@@ -21,20 +21,58 @@ render_sidebar()
 def _get_state(_mtime: float):
     return sm.get_or_build_state()
 
+def _compute_adjusted_elos(base_state, official, schedule, ko_resolved):
+    if not official:
+        return base_state['elos']
+    s = copy.deepcopy(base_state)
+    for m in schedule:
+        mid = m['id']
+        if mid in official and m.get('home') and m.get('away'):
+            res = official[mid]
+            sm.apply_result(s, m['home'], m['away'],
+                            int(res['home_score']), int(res['away_score']),
+                            'FIFA World Cup', neutral=True)
+    for m in ko_resolved:
+        mid = m['id']
+        if mid in official and m.get('home') and m.get('away'):
+            res = official[mid]
+            sm.apply_result(s, m['home'], m['away'],
+                            int(res['home_score']), int(res['away_score']),
+                            'FIFA World Cup', neutral=True)
+    return s['elos']
+
 @st.cache_data(show_spinner='Simulando...')
-def _run_mc(state_hash: str, n_sims: int):
-    state = sm.load_state() or sm.build_default_state()
-    return mc.run_simulations(
-        COPA_2026_GROUPS, state['elos'], n_sims,
+def _run_mc(cache_key: str, n_sims: int, adj_elos_json: str = '', official_json: str = ''):
+    """Fixa os resultados oficiais da Copa 2026 e simula apenas o que ainda
+    está pendente, respeitando o chaveamento real."""
+    state    = sm.load_state() or sm.build_default_state()
+    elos     = dict(json.loads(adj_elos_json)) if adj_elos_json else state['elos']
+    official = json.loads(official_json) if official_json else {}
+    schedule = cm.generate_schedule()
+    ko_sched = cm.generate_knockout_schedule()
+    return cm.run_realistic_simulations(
+        schedule, ko_sched, official, elos, n_simulations=n_sims,
         form=state.get('form', {}), copa_history=state.get('copa_history', {}),
     )
 
 
-state = _get_state(sm.state_file_mtime())
+state       = _get_state(sm.state_file_mtime())
+official    = cm.load_official()
+schedule    = cm.generate_schedule()
+ko_sched    = cm.generate_knockout_schedule()
+standings   = cm.compute_group_standings(schedule, official, {})
+br_slots    = cm.resolve_bracket_slots(standings)
+ko_official = {k: v for k, v in official.items() if not k.startswith('G_')}
+ko_resolved = cm.resolve_knockout_teams(ko_sched, br_slots, ko_official, {})
+adj_elos    = _compute_adjusted_elos(state, official, schedule, ko_resolved)
+_off_hash   = hashlib.md5(json.dumps(sorted(official.items()), sort_keys=True).encode()).hexdigest()[:6]
+_cache_key  = f"{state['state_hash']}_{_off_hash}"
+_adj_elos_j = json.dumps(sorted(adj_elos.items()))
+_official_j = json.dumps(official)
 st.markdown('<h1 style="font-size:1.8rem">🎲 Simulação Monte Carlo</h1>', unsafe_allow_html=True)
 st.markdown(
     '<div class="stage-label">Probabilidades calculadas via '
-    'Elo + Forma + Histórico Copa</div><br>',
+    'Elo + Forma + Histórico Copa · resultados oficiais da Copa 2026 fixados</div><br>',
     unsafe_allow_html=True,
 )
 
@@ -43,30 +81,31 @@ tab1, tab2 = st.tabs(['🎯 Sortear 1 Copa', '📊 Monte Carlo'])
 
 # ── Tab 1: single simulation ──────────────────────────────────────────────────
 with tab1:
-    st.markdown('Clique para simular **um torneio completo** do zero.')
+    st.markdown(
+        'Clique para sortear o **restante do torneio** — fixa os resultados '
+        'oficiais da Copa 2026 já disputados e simula apenas o que falta.'
+    )
 
     if st.button('🎲 Sortear Nova Copa', type='primary'):
         import numpy as np
         np.random.seed(None)
-        elos = state['elos']
-        form = state.get('form', {})
-        copa = state.get('copa_history', {})
-        group_res = mc.simulate_group_stage(COPA_2026_GROUPS, elos, form, copa)
-        advancing = mc.get_advancing_teams(group_res, N_BEST_THIRDS)
-        knockout  = mc.simulate_knockout_stage(advancing, elos, form, copa)
-        champion  = next((t for t, s in knockout.items() if 'Campeão' in s), None)
-        finalists = [t for t, s in knockout.items() if 'Final' in s or 'Campeão' in s]
-        semis     = [t for t, s in knockout.items() if 'Semifinal' in s]
+        sim = cm.simulate_one_tournament_realistic(
+            schedule, ko_sched, official, adj_elos,
+            form=state.get('form', {}), copa_history=state.get('copa_history', {}),
+        )
+        champion  = sim['champion']
+        finalists = [t for t, s in sim['knockout'].items() if 'Final' in s or 'Campeão' in s]
+        semis     = [t for t, s in sim['knockout'].items() if 'Semifinal' in s]
         st.session_state['single_sim'] = {
-            'group_res': group_res, 'advancing': advancing,
-            'knockout': knockout, 'champion': champion,
+            'group_res': sim['group_res'], 'advancing': sim['advancing'],
+            'knockout': sim['knockout'], 'champion': champion,
             'finalists': finalists, 'semis': semis,
         }
 
     if st.session_state.get('single_sim'):
         sim   = st.session_state['single_sim']
         champ = sim['champion']
-        elos  = state['elos']
+        elos  = adj_elos
 
         if champ:
             st.success(f'🏆 **Campeão: {champ}** — Elo {round(elos.get(champ, 1500))}')
@@ -115,7 +154,7 @@ with tab2:
     probs = None
     if run_mc or st.session_state.get('ran_mc_v2', False):
         with st.spinner(f'Simulando {n_sims:,} torneios...'):
-            probs = _run_mc(state['state_hash'], int(n_sims))
+            probs = _run_mc(_cache_key, int(n_sims), _adj_elos_j, _official_j)
         st.session_state['ran_mc_v2'] = True
         if run_mc:
             st.success(f'{n_sims:,} simulações concluídas!')

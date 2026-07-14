@@ -10,8 +10,8 @@ import pandas as pd
 import plotly.express as px
 from collections import Counter, defaultdict
 
-from config import COPA_2026_GROUPS, DEFAULT_N_SIMULATIONS, N_BEST_THIRDS
-from src import state_manager as sm, monte_carlo as mc
+from config import DEFAULT_N_SIMULATIONS
+from src import state_manager as sm
 from src import copa_manager as cm
 from src.copa_manager import TEAM_FLAGS
 from src.styles import get_css
@@ -29,11 +29,16 @@ def _load_state(_mtime: float):
     return sm.get_or_build_state()
 
 @st.cache_data(show_spinner=False)
-def _run_scenarios(cache_key: str, n_sims: int, adj_elos_json: str = '') -> list:
-    state = sm.load_state() or sm.build_default_state()
-    elos  = dict(json.loads(adj_elos_json)) if adj_elos_json else state['elos']
-    return mc.run_bracket_scenarios(
-        COPA_2026_GROUPS, elos, n_simulations=n_sims,
+def _run_scenarios(cache_key: str, n_sims: int, adj_elos_json: str = '', official_json: str = '') -> list:
+    """Fixa os resultados oficiais da Copa 2026 (official_json) e simula
+    apenas semifinais/final/3º lugar ainda pendentes, no chaveamento real."""
+    state    = sm.load_state() or sm.build_default_state()
+    elos     = dict(json.loads(adj_elos_json)) if adj_elos_json else state['elos']
+    official = json.loads(official_json) if official_json else {}
+    schedule = cm.generate_schedule()
+    ko_sched = cm.generate_knockout_schedule()
+    return cm.run_realistic_bracket_scenarios(
+        schedule, ko_sched, official, elos, n_simulations=n_sims,
         form=state.get('form', {}), copa_history=state.get('copa_history', {}),
     )
 
@@ -276,14 +281,16 @@ if copa_sim or copa_ko_sim:
     st.info(f'⚡ {n_applied} resultado(s) simulado(s) incorporado(s) nas probabilidades abaixo.')
 
 # ── Run scenarios ──────────────────────────────────────────────────────────────
+_official_for_sim = {**official, **copa_sim, **copa_ko_sim}
+_official_j = json.dumps(_official_for_sim)
 with st.spinner(f'Rodando {N_SCENARIOS:,} cenários completos…'):
-    scenarios = _run_scenarios(_cache_key, N_SCENARIOS, _adj_elos_j)
+    scenarios = _run_scenarios(_cache_key, N_SCENARIOS, _adj_elos_j, _official_j)
 
 # Se o cache tem dados antigos (sem scores), limpa e re-executa
 if scenarios and 'final_score' not in scenarios[0]:
     _run_scenarios.clear()
     with st.spinner('Atualizando cenários com placares…'):
-        scenarios = _run_scenarios(_cache_key, N_SCENARIOS, _adj_elos_j)
+        scenarios = _run_scenarios(_cache_key, N_SCENARIOS, _adj_elos_j, _official_j)
 
 # ── Pre-compute aggregates ─────────────────────────────────────────────────────
 n = len(scenarios)

@@ -506,6 +506,261 @@ TV_INFO = {
 }
 
 
+# ── Monte Carlo realista (fixa resultados oficiais da Copa 2026) ────────────
+# Ao contrário de monte_carlo.run_simulations/run_bracket_scenarios (que sorteiam
+# grupos e chaveamento aleatórios do zero em cada iteração), estas funções
+# fixam tudo que já é resultado oficial — fase de grupos, oitavas, quartas etc.
+# — e simulam apenas as partidas que ainda não aconteceram, respeitando o
+# chaveamento real da Copa 2026.
+
+_STAGE_BY_PHASE = {'r16': 'Oitavas', 'qf': 'Quartas', 'sf': 'Semifinal', 'final': 'Final'}
+
+
+def _knockout_winner(m: dict, res: dict) -> str:
+    hs, as_ = int(res['home_score']), int(res['away_score'])
+    if hs > as_:
+        return m['home']
+    if as_ > hs:
+        return m['away']
+    ph = int(res.get('pen_home') or 0)
+    pa = int(res.get('pen_away') or 0)
+    return m['home'] if ph > pa else m['away']
+
+
+def _advancing_from_standings(standings: dict, n_best_thirds: int = 8) -> list:
+    thirds = get_best_thirds(standings, n_best_thirds)
+    third_teams = {e['team'] for e in thirds}
+    advancing = []
+    for s in standings.values():
+        advancing.extend(s['sorted'][:2])
+        if len(s['sorted']) >= 3 and s['sorted'][2] in third_teams:
+            advancing.append(s['sorted'][2])
+    return advancing
+
+
+def _tally_reached_stages(advancing: list, final_resolved: list, combined_ko: dict):
+    """Retorna (reached, champion). reached: team → set de fases alcançadas,
+    usando os mesmos rótulos de monte_carlo._ROUND_NAMES + 'Campeão'."""
+    from collections import defaultdict
+    reached: dict = defaultdict(set)
+    for t in advancing:
+        reached[t].add('Rodada de 32')
+
+    champion = None
+    for m in final_resolved:
+        label = _STAGE_BY_PHASE.get(m['phase'])
+        if not label or not (m.get('home') and m.get('away')):
+            continue
+        reached[m['home']].add(label)
+        reached[m['away']].add(label)
+        if m['phase'] == 'final':
+            res = combined_ko.get(m['id'])
+            if res:
+                champion = _knockout_winner(m, res)
+    if champion:
+        reached[champion].add('Campeão')
+    return dict(reached), champion
+
+
+def _simulate_one_tournament(
+    schedule: list, ko_schedule: list, official: dict,
+    elos: dict, form: dict, copa_history: dict, n_best_thirds: int = 8,
+):
+    """Roda UM torneio completo: usa os resultados oficiais já registrados e
+    simula apenas o que ainda está pendente (grupos e mata-mata), respeitando
+    o chaveamento real da Copa 2026. Retorna
+    (standings, slots, advancing, final_resolved, combined_ko)."""
+    from src import monte_carlo as mc
+
+    sim_group: dict = {}
+    for m in schedule:
+        if m['phase'] != 'group' or m['id'] in official:
+            continue
+        home, away = m['home'], m['away']
+        _pa, _pb, ga, gb = mc.simulate_group_match(
+            elos.get(home, 1500), elos.get(away, 1500),
+            form.get(home, []), form.get(away, []),
+            copa_history.get(home, {}), copa_history.get(away, {}),
+        )
+        sim_group[m['id']] = {'home_score': ga, 'away_score': gb}
+
+    standings = compute_group_standings(schedule, official, sim_group)
+    slots     = resolve_bracket_slots(standings)
+    advancing = _advancing_from_standings(standings, n_best_thirds)
+
+    ko_official = {k: v for k, v in official.items() if not k.startswith('G_')}
+    sim_ko: dict = {}
+    for _ in range(8):
+        resolved   = resolve_knockout_teams(ko_schedule, slots, ko_official, sim_ko)
+        progressed = False
+        for m in resolved:
+            mid = m['id']
+            if mid in ko_official or mid in sim_ko:
+                continue
+            if not (m.get('home') and m.get('away')):
+                continue
+            home, away = m['home'], m['away']
+            ga, gb, went_pens, winner_idx, pen_a, pen_b = mc.simulate_knockout_match_with_score(
+                elos.get(home, 1500), elos.get(away, 1500),
+                form.get(home, []), form.get(away, []),
+                copa_history.get(home, {}), copa_history.get(away, {}),
+            )
+            entry = {'home_score': ga, 'away_score': gb}
+            if went_pens:
+                entry['pen_home'] = pen_a
+                entry['pen_away'] = pen_b
+            sim_ko[mid] = entry
+            progressed = True
+        if not progressed:
+            break
+
+    final_resolved = resolve_knockout_teams(ko_schedule, slots, ko_official, sim_ko)
+    combined_ko    = {**sim_ko, **ko_official}
+    return standings, slots, advancing, final_resolved, combined_ko
+
+
+def run_realistic_simulations(
+    schedule: list, ko_schedule: list, official: dict,
+    elos: dict, n_simulations: int = 5000,
+    form: dict | None = None, copa_history: dict | None = None,
+    n_best_thirds: int = 8,
+) -> dict:
+    """Mesma saída de monte_carlo.run_simulations, mas fixando os resultados
+    oficiais da Copa 2026 já disputados (grupos e mata-mata) e simulando
+    apenas o que falta, no chaveamento real — em vez de sortear grupos e
+    confrontos aleatórios do zero a cada iteração."""
+    from config import COPA_2026_GROUPS
+    form         = form or {}
+    copa_history = copa_history or {}
+    all_teams    = [t for teams in COPA_2026_GROUPS.values() for t in teams]
+
+    _zero  = lambda: {'campeao': 0, 'final': 0, 'semifinal': 0,
+                      'quartas': 0, 'oitavas': 0, 'rodada32': 0}
+    counts = {t: _zero() for t in all_teams}
+
+    for _ in range(n_simulations):
+        _, _, advancing, final_resolved, combined_ko = _simulate_one_tournament(
+            schedule, ko_schedule, official, elos, form, copa_history, n_best_thirds)
+        reached, _champion = _tally_reached_stages(advancing, final_resolved, combined_ko)
+
+        for team, stages in reached.items():
+            if team not in counts:
+                continue
+            c = counts[team]
+            if 'Campeão'   in stages: c['campeao']   += 1
+            if 'Final'     in stages or 'Campeão' in stages: c['final'] += 1
+            if 'Semifinal' in stages: c['semifinal'] += 1
+            if 'Quartas'   in stages: c['quartas']   += 1
+            if 'Oitavas'   in stages: c['oitavas']   += 1
+            if 'Rodada de 32' in stages: c['rodada32'] += 1
+
+    probs = {}
+    for t in all_teams:
+        c = counts[t]
+        probs[t] = {k: round(v / n_simulations, 4) for k, v in c.items()}
+        probs[t]['grupo'] = probs[t]['rodada32']
+    return probs
+
+
+def simulate_one_tournament_realistic(
+    schedule: list, ko_schedule: list, official: dict, elos: dict,
+    form: dict | None = None, copa_history: dict | None = None,
+    n_best_thirds: int = 8,
+) -> dict:
+    """Sorteia UM torneio completo, fixando os resultados oficiais da Copa 2026
+    já disputados e simulando apenas o que falta. Retorna
+    {'group_res', 'advancing', 'knockout', 'champion'} no mesmo formato usado
+    pela página de simulação (compatível com monte_carlo.simulate_group_stage
+    + simulate_knockout_stage)."""
+    form         = form or {}
+    copa_history = copa_history or {}
+    standings, _slots, advancing, final_resolved, combined_ko = _simulate_one_tournament(
+        schedule, ko_schedule, official, elos, form, copa_history, n_best_thirds)
+    reached, champion = _tally_reached_stages(advancing, final_resolved, combined_ko)
+
+    group_res = {
+        gname: {
+            'standings': s['sorted'],
+            'points':    s['points'],
+            'goal_diff': s['gd'],
+            'goals_for': s['gf'],
+        }
+        for gname, s in standings.items()
+    }
+    return {
+        'group_res': group_res,
+        'advancing': advancing,
+        'knockout':  reached,
+        'champion':  champion,
+    }
+
+
+def run_realistic_bracket_scenarios(
+    schedule: list, ko_schedule: list, official: dict, elos: dict,
+    n_simulations: int = 2000,
+    form: dict | None = None, copa_history: dict | None = None,
+    n_best_thirds: int = 8,
+) -> list:
+    """Mesma saída de monte_carlo.run_bracket_scenarios, mas usando as
+    semifinais/final reais da Copa 2026 (chaveamento + resultados já
+    decididos) em vez de sortear confrontos aleatórios do zero."""
+    form         = form or {}
+    copa_history = copa_history or {}
+    scenarios: list = []
+
+    def _score_tuple(m, combined_ko):
+        res = combined_ko.get(m['id']) or {}
+        ga  = res.get('home_score', 0)
+        gb  = res.get('away_score', 0)
+        has_pens = 'pen_home' in res
+        pa  = res.get('pen_home', 0)
+        pb  = res.get('pen_away', 0)
+        return ga, gb, has_pens, pa, pb
+
+    for _ in range(n_simulations):
+        _, _, _advancing, final_resolved, combined_ko = _simulate_one_tournament(
+            schedule, ko_schedule, official, elos, form, copa_history, n_best_thirds)
+
+        sf_matches  = [m for m in final_resolved if m['phase'] == 'sf']
+        final_match = next((m for m in final_resolved if m['phase'] == 'final'), None)
+        third_match = next((m for m in final_resolved if m['phase'] == 'tp'), None)
+        if len(sf_matches) < 2 or final_match is None or third_match is None:
+            continue
+
+        sf1, sf2  = sf_matches[0], sf_matches[1]
+        sf1_res   = combined_ko.get(sf1['id'])
+        sf2_res   = combined_ko.get(sf2['id'])
+        final_res = combined_ko.get(final_match['id'])
+        third_res = combined_ko.get(third_match['id'])
+        if not (sf1_res and sf2_res and final_res):
+            continue
+
+        sf1_w = _knockout_winner(sf1, sf1_res)
+        sf2_w = _knockout_winner(sf2, sf2_res)
+        champion  = _knockout_winner(final_match, final_res)
+        runner_up = final_match['away'] if champion == final_match['home'] else final_match['home']
+        third  = _knockout_winner(third_match, third_res) if third_res else None
+        fourth = None
+        if third and third_match.get('home') and third_match.get('away'):
+            fourth = third_match['away'] if third == third_match['home'] else third_match['home']
+
+        scenarios.append({
+            'sf1':         (sf1['home'], sf1['away'], sf1_w),
+            'sf1_score':   _score_tuple(sf1, combined_ko),
+            'sf2':         (sf2['home'], sf2['away'], sf2_w),
+            'sf2_score':   _score_tuple(sf2, combined_ko),
+            'final':       (final_match['home'], final_match['away'], champion),
+            'final_score': _score_tuple(final_match, combined_ko),
+            'third':       (third_match.get('home'), third_match.get('away'), third),
+            'third_score': _score_tuple(third_match, combined_ko),
+            'champion':    champion,
+            'runner_up':   runner_up,
+            'third_place': third,
+            'fourth':      fourth,
+        })
+    return scenarios
+
+
 def get_tv_channels(home: str | None, away: str | None, phase: str) -> list[str]:
     if not home or not away:
         return ['Globoplay']

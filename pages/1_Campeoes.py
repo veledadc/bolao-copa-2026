@@ -1,5 +1,5 @@
 """Página 1 — Probabilidades de Título por fase"""
-import sys, os
+import sys, os, json, hashlib, copy
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import streamlit as st
@@ -7,8 +7,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from config import COPA_2026_GROUPS, DEFAULT_N_SIMULATIONS, TEAM_CONFEDERATION, CONFEDERATION_COLORS
-from src import state_manager as sm, monte_carlo as mc
+from config import DEFAULT_N_SIMULATIONS, TEAM_CONFEDERATION, CONFEDERATION_COLORS
+from src import state_manager as sm
+from src import copa_manager as cm
 from src.features import team_feature_summary
 from src.styles import get_css
 from src.sidebar import render_sidebar
@@ -19,13 +20,39 @@ render_sidebar()
 st.markdown('<h1 style="font-size:1.8rem">🏆 Probabilidades por Fase</h1>', unsafe_allow_html=True)
 
 
+def _compute_adjusted_elos(base_state, official, schedule, ko_resolved):
+    if not official:
+        return base_state['elos']
+    s = copy.deepcopy(base_state)
+    for m in schedule:
+        mid = m['id']
+        if mid in official and m.get('home') and m.get('away'):
+            res = official[mid]
+            sm.apply_result(s, m['home'], m['away'],
+                            int(res['home_score']), int(res['away_score']),
+                            'FIFA World Cup', neutral=True)
+    for m in ko_resolved:
+        mid = m['id']
+        if mid in official and m.get('home') and m.get('away'):
+            res = official[mid]
+            sm.apply_result(s, m['home'], m['away'],
+                            int(res['home_score']), int(res['away_score']),
+                            'FIFA World Cup', neutral=True)
+    return s['elos']
+
+
 @st.cache_data(show_spinner='Simulando torneios...')
-def _run_sim(state_hash: str, n_sims: int):
-    state = sm.load_state() or sm.build_default_state()
-    return mc.run_simulations(
-        COPA_2026_GROUPS, state['elos'], n_sims,
-        form=state.get('form', {}),
-        copa_history=state.get('copa_history', {}),
+def _run_sim(cache_key: str, n_sims: int, adj_elos_json: str = '', official_json: str = ''):
+    """Fixa os resultados oficiais da Copa 2026 (official_json) e simula
+    apenas o que ainda está pendente, respeitando o chaveamento real."""
+    state    = sm.load_state() or sm.build_default_state()
+    elos     = dict(json.loads(adj_elos_json)) if adj_elos_json else state['elos']
+    official = json.loads(official_json) if official_json else {}
+    schedule = cm.generate_schedule()
+    ko_sched = cm.generate_knockout_schedule()
+    return cm.run_realistic_simulations(
+        schedule, ko_sched, official, elos, n_simulations=n_sims,
+        form=state.get('form', {}), copa_history=state.get('copa_history', {}),
     )
 
 
@@ -34,12 +61,24 @@ with st.sidebar:
     n_sims  = st.slider('Simulações', 1_000, 20_000, DEFAULT_N_SIMULATIONS, 1_000)
     run_btn = st.button('▶ Rodar Simulação', type='primary', use_container_width=True)
 
-state = sm.load_state() or sm.build_default_state()
+state       = sm.load_state() or sm.build_default_state()
+official    = cm.load_official()
+schedule    = cm.generate_schedule()
+ko_sched    = cm.generate_knockout_schedule()
+standings   = cm.compute_group_standings(schedule, official, {})
+br_slots    = cm.resolve_bracket_slots(standings)
+ko_official = {k: v for k, v in official.items() if not k.startswith('G_')}
+ko_resolved = cm.resolve_knockout_teams(ko_sched, br_slots, ko_official, {})
+adj_elos    = _compute_adjusted_elos(state, official, schedule, ko_resolved)
+_off_hash   = hashlib.md5(json.dumps(sorted(official.items()), sort_keys=True).encode()).hexdigest()[:6]
+_cache_key  = f"{state['state_hash']}_{_off_hash}"
+_adj_elos_j = json.dumps(sorted(adj_elos.items()))
+
 if run_btn:
     _run_sim.clear()
 
 with st.spinner(f'Executando {n_sims:,} simulações...'):
-    probs = _run_sim(state['state_hash'], n_sims)
+    probs = _run_sim(_cache_key, n_sims, _adj_elos_j, json.dumps(official))
 
 # ── Tabela mestre ─────────────────────────────────────────────────────────────
 rows = []

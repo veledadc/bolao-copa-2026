@@ -724,5 +724,95 @@
     "recorded_at": "2026-07-04T18:00:00.000000",
     "home": "Paraguay",
     "away": "France"
+  },
+  "M91": {
+    "home_score": 1,
+    "away_score": 2,
+    "locked": true,
+    "recorded_at": "2026-07-08T08:24:42.255770",
+    "home": "Brazil",
+    "away": "Norway"
+  },
+  "M92": {
+    "home_score": 2,
+    "away_score": 3,
+    "locked": true,
+    "recorded_at": "2026-07-08T08:24:42.263724",
+    "home": "Mexico",
+    "away": "England"
+  },
+  "M93": {
+    "home_score": 0,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-07-08T08:24:42.270232",
+    "home": "Portugal",
+    "away": "Spain"
+  },
+  "M94": {
+    "home_score": 1,
+    "away_score": 4,
+    "locked": true,
+    "recorded_at": "2026-07-08T08:24:42.277046",
+    "home": "USA",
+    "away": "Belgium"
+  },
+  "M95": {
+    "home_score": 3,
+    "away_score": 2,
+    "locked": true,
+    "recorded_at": "2026-07-08T08:24:42.283885",
+    "home": "Argentina",
+    "away": "Egypt"
+  },
+  "M96": {
+    "home_score": 0,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-07-08T08:24:42.290562",
+    "home": "Switzerland",
+    "away": "Colombia",
+    "pen_home": 4,
+    "pen_away": 3
+  },
+  "M97": {
+    "home_score": 2,
+    "away_score": 0,
+    "locked": true,
+    "recorded_at": "2026-07-14T18:06:09.712084",
+    "home": "France",
+    "away": "Morocco"
+  },
+  "M98": {
+    "home_score": 2,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-07-14T18:06:09.719537",
+    "home": "Spain",
+    "away": "Belgium"
+  },
+  "M99": {
+    "home_score": 1,
+    "away_score": 2,
+    "locked": true,
+    "recorded_at": "2026-07-14T18:06:09.727776",
+    "home": "Norway",
+    "away": "England"
+  },
+  "M100": {
+    "home_score": 3,
+    "away_score": 1,
+    "locked": true,
+    "recorded_at": "2026-07-14T18:09:09.916276",
+    "home": "Argentina",
+    "away": "Switzerland"
+  },
+  "M101": {
+    "home_score": 0,
+    "away_score": 2,
+    "locked": true,
+    "recorded_at": "2026-07-14T18:09:21.544037",
+    "home": "France",
+    "away": "Spain"
   }
 }
